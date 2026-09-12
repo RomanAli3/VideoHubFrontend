@@ -8,7 +8,7 @@ function HeaderSection() {
        <div className="flex justify-between  flex-wrap items-center py-2 px-4 ">
 <div className="logo flex gap-3 m-1 items-center">
         <span><img className="h-7 md:h-10" src="/favicon.png"/></span>
-        <span><h1 className="text-md md:text-xl lg:text-2xl font-semibold">Video Hub</h1></span>
+        <span><h1 className="text-md md:text-xl lg:text-2xl font-bold">VideoHub</h1></span>
        </div>
        <div className="search-bar flex">
         <input type="text" placeholder="Search..." className={`border outline-0  indent-8  rounded-l-2xl w-40 md:w-80 py-1 ${darkMode?"bg-gray-800 border-gray-700 placeholder-gray-200":"bg-gray-100 border-gray-100 placeholder-gray-800"}`} />
@@ -17,13 +17,13 @@ function HeaderSection() {
        <div className="flex gap-4 mt-1 text-sm poppins-extralight  items-center">
         <span>
             <button className=
-            {`px-3  py-1 rounded-xl border cursor-pointer ${darkMode?"bg-gray-800 border-gray-700":"bg-gray-100 border-gray-100"}`}><i class="fa-solid fa-plus"></i> Create</button>
+            {`px-3  py-1 rounded-xl border cursor-pointer ${darkMode?"bg-gray-800 border-gray-700":"bg-gray-100 border-gray-100"}`}><i className="fa-solid fa-plus"></i> Create</button>
         </span>
         <span>
-            <NavLink to='/' ><i className="fa-regular fa-house"></i> Home</NavLink>
+            <NavLink className={({isActive})=>isActive?"text-red-500":""} to='/' ><i className="fa-regular fa-house"></i> Home</NavLink>
         </span>
           <span>
-            <NavLink to='/profile' ><i className="fa-regular fa-user"></i> Profile</NavLink>
+            <NavLink className={({isActive})=>isActive?"text-red-500":""} to='/profile' ><i className="fa-regular fa-user"></i> Profile</NavLink>
         </span>
         <span>    
             <button onClick={toggleTheme} className="bg-transparent px-3 py-1  duration-300">

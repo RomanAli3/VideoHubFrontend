@@ -4,7 +4,7 @@ export const VideoContext = createContext();
 
 export const VideoContextProvider = ({children})=>{
 
-    const [videos,setVideos] = useState()
+    const [videos,setVideos] = useState(null)
 
     return(
         <VideoContext.Provider value={{videos,setVideos}}>

@@ -3,6 +3,7 @@ import { useState,useEffect } from "react"
 import { useTheme } from "../Contexts/themeContext"
 function HomePage() {
       const { darkMode, toggleTheme } = useTheme();
+        const [Loading,setLoading] = useState(false)
 const [copylink ,setCopylink] = useState(null)
 function copyVideoLink(link){
   navigator.clipboard.writeText(link)
@@ -14,12 +15,13 @@ function setLinkPopup(){
   setLinkCopied(true)
   setTimeout(() => {
     setLinkCopied(false)
+
   }, 1000);
 }
   const {videos,setVideos} = useVideo()
- useEffect(() => {
-    const getVideos = async () => {
+      const getVideos = async () => {
         try {
+          setLoading(true)
             const res = await fetch(
                 "http://localhost:4000/video/get-all-videos"
             );
@@ -31,10 +33,13 @@ function setLinkPopup(){
             setVideos(videoData);
         } catch (error) {
             console.log(error);
+        }finally{
+          setLoading(false)
         }
     };
-
-    getVideos();
+ useEffect(() => {
+if(!videos){
+  getVideos()}
 }, []);
 const timeAgo = (date) => {
   const minutes = Math.floor((Date.now() - new Date(date)) / 60000);
@@ -71,6 +76,8 @@ const timeAgo = (date) => {
     <p onClick={()=>{
       copyVideoLink(video.video)
       setLinkPopup()
+      setCopylink(null)
+
     }} className="absolute right-3 top-3 bg-black text-white p-2 duration-300  rounded-sm whitespace-nowrap">
       Copy link
     </p>
@@ -88,6 +95,15 @@ const timeAgo = (date) => {
       </div>
       </div>
      )}
+
+      {
+    Loading &&
+       <div className="bg-black/30 justify-center flex items-center z-50 h-full fixed inset-0">
+      <div className={`${darkMode?"bg-gray-800 ":"bg-gray-300"} rounded-md  animate-pulse p-2 h-20 w-40`}>
+<p className={`font-bold text-center m-4 ${darkMode?"text-green-400":"text-green-600"}`}><i className="fa-solid fa-spinner animate-spin"></i></p>
+      </div>
+      </div>
+  }
     </main>
   )
 }
