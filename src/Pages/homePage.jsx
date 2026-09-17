@@ -35,6 +35,7 @@ function setLinkPopup(){
             console.log(error);
         }finally{
           setLoading(false)
+         
         }
     };
  useEffect(() => {

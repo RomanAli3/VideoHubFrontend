@@ -2,8 +2,10 @@ import React from 'react'
 import {useTheme} from "../Contexts/themeContext"
 import {useState} from 'react'
 import { useUser } from '../Contexts/userContext'
+import { useVideo } from '../Contexts/videoContext'
 function ProfilePage() {
   const { darkMode, toggleTheme } = useTheme();
+  const {videos,setVideos} = useVideo()
   const [showPassword, setShowPassword] = useState(false);
   const [loginForm,setLoginForm] = useState(false)
   const {user,setUser} = useUser()
@@ -13,11 +15,15 @@ function ProfilePage() {
   const [LoginUsernameOrEmail,setLoginUsernameOrEmail] = useState("")
   const [LoginPassword,setLoginPassword] = useState("")
 
+  const [error, setError] = useState("")
   const handleLogin = async (e) => {
       e.preventDefault();
-      setLoading(true)
     if(LoginUsernameOrEmail.trim()===""||LoginPassword.trim()===""){
       alert("Please fill all the fields")
+      return
+    }
+    if(LoginPassword.trim().length<6){
+      setError("Password must be 6 characters")
       return
     }
      if(LoginUsernameOrEmail.includes("@")){
@@ -33,7 +39,9 @@ function ProfilePage() {
       }
     }
    try {
-    const data = await fetch("http://localhost:4000/user/login",{
+      setLoading(true)
+setError("")
+    const res = await fetch("http://localhost:4000/user/login",{
     method:"POST",
     credentials:"include",
     headers:{
@@ -41,41 +49,76 @@ function ProfilePage() {
     },
     body:JSON.stringify(loginData)
   })
-    .then((res)=>res.json())
-  .catch((err)=>{
-    console.log(err)
-  })
-  setUser(data.data)
+  const data = await res.json()
 
+  if (res.ok) {
+   setUser(data.data)
+    setLoginForm(false)
+   window.location.reload()
+
+} else {
+   setError(data.message)
+   console.log(data.message)
+   return
+}
+setLoading(false)
   setLoginUsernameOrEmail("")
   setLoginPassword("")
-  
    } catch (error) {
     console.log(error)
    }
    finally{
     setLoading(false)
     console.log(user)
-    setLoginForm(false)
+   
    }
 
   }
+
+
+const [descriptionOpen,setDescriptionOpen]=useState(false)
   return (
  <main className={` transition-colors  duration-300 ${darkMode?"bg-gray-900 text-white":"bg-white text-gray-800"} min-h-screen`}>
-  {user?<div className='relative'>
+  {user?<div className='relative '>
     <div>
       <img className='w-full   h-45 md:h-60 rounded-2xl p-2' src={user?.coverImage}/>
     </div>
-   <div className='m-3 absolute flex items-center gap-6 top-36 md:top-50'>
-     <div className={`${darkMode?" border-blue-800":"border-black"} backdrop-blur-sm  h-34 md:h-40  w-34 md:w-40 rounded-full border-2`}>
-      <img className='h-34 md:h-40  w-34 md:w-40 rounded-full' src={user?.profilePicture}/>
+   <div className='m-3 absolute items-center flex  gap-6 top-42 md:top-50'>
+     <div className={`${darkMode?" border-blue-800":"border-black"} backdrop-blur-sm  h-30 md:h-40  w-30 md:w-40 rounded-full border`}>
+      <img className='h-30 md:h-40  w-30 md:w-40 rounded-full' src={user?.profilePicture}/>
 </div>
-<div>
+<div className=''> 
   <h4 className='text-xl md:text-3xl font-semibold'>{user?.fullName} <i className="fa-solid fa-pencil text-sm cursor-pointer"></i></h4>
   <h4 className='text-sm md:text-md '>@{user?.fullName}</h4>
-  <p className='text-sm '>{user?.description}</p>
-
+  <p className='text-sm text-wrap w-40 md:w-full max-w-auto'>{user?.description?.split(" ").slice(0, 7).join(" ")} <strong onClick={()=>setDescriptionOpen(true)} className='cursor-pointer whitespace-nowrap underline'>{!descriptionOpen&&"..more"}</strong></p>
+ <p>
+ </p> 
 </div>
+{descriptionOpen && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+    
+    <div
+      className={`relative w-full max-w-md max-h-[80vh] overflow-y-auto rounded-md p-5 ${
+        darkMode ? "bg-gray-900/95 text-white" : "bg-gray-300 text-black"
+      }`}
+    >
+      
+      <button
+        onClick={() => setDescriptionOpen(false)}
+        className="absolute top-3 right-3 cursor-pointer"
+      >
+        <i className="fa-regular fa-circle-xmark text-red-400"></i>
+      </button>
+
+      <p className="text-sm text-center mt-6 wrap-break-words">
+        <strong>Description:</strong>
+        <br />
+        {user?.description}
+      </p>
+
+    </div>
+  </div>
+)}
    </div>
   </div>:
   <div className='items-center min-h-screen flex justify-center'>
@@ -104,6 +147,10 @@ function ProfilePage() {
 
 <input required type={showPassword?"text":"password"} placeholder='Password' value={LoginPassword} onChange={(e)=>setLoginPassword(e.target.value)} className={`${darkMode?"bg-gray-800 border-gray-700 placeholder-gray-200 text-white":"bg-gray-200 border-gray-200 placeholder-gray-800 text-black"} w-60 md:w-90 py-2 px-2 rounded-lg outline-none border`} />
 </div>
+{error&&
+<p className='text-sm text-red-600 p-1'>{error}</p>
+}
+<br/>
       <span className='p-2 flex items-center gap-1'><input onChange={(e)=>setShowPassword(!showPassword)} type='checkbox' />
       <label className='text-sm'>Show password</label>
       </span>
@@ -128,6 +175,8 @@ function ProfilePage() {
       </div>
       </div>
 }
+
+
  </main>
   )
 }
