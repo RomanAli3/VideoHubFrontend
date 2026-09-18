@@ -3,6 +3,7 @@ import {useTheme} from "../Contexts/themeContext"
 import {useState} from 'react'
 import { useUser } from '../Contexts/userContext'
 import { useVideo } from '../Contexts/videoContext'
+
 function ProfilePage() {
   const { darkMode, toggleTheme } = useTheme();
   const {videos,setVideos} = useVideo()
@@ -14,7 +15,6 @@ function ProfilePage() {
 {/*Login section code */}
   const [LoginUsernameOrEmail,setLoginUsernameOrEmail] = useState("")
   const [LoginPassword,setLoginPassword] = useState("")
-
   const [error, setError] = useState("")
   const handleLogin = async (e) => {
       e.preventDefault();
@@ -75,20 +75,70 @@ setLoading(false)
 
   }
 
+  {/*changeCoverImage section code */}
+  const [isSelectCoverImage,setIsSelectCoverImage]=useState(false)
+  const [updateCoverImage,setUpdateCoverImage]=useState()
+  const handleUpdateCoverIamge=async()=>{
+    if(!updateCoverImage){
+      setError("please select cover Image")
+      return
+    }
+    const formData = new FormData();
+
+    formData.append("coverImage",updateCoverImage)
+
+ try {
+  setLoading(true)
+     const res =await fetch("http://localhost:4000/user/change-cover-image",{
+      method:"PATCH",
+      credentials:"include",
+      body:formData
+    })
+    const data= await res.json()
+
+    if(res.ok){
+      setIsSelectCoverImage(false)
+      setLoading(false)
+      window.location.reload()
+    }
+    else{
+      setError("Error while uploading! update your time")
+      return
+    }
+    setUpdateCoverImage()
+ } catch (error) {
+  console.log(error)
+ }
+ finally{
+    setLoading(false)
+   setIsSelectCoverImage(false)
+   }
+
+
+
+
+   
+  }
+
+
+
 
 const [descriptionOpen,setDescriptionOpen]=useState(false)
   return (
  <main className={` transition-colors  duration-300 ${darkMode?"bg-gray-900 text-white":"bg-white text-gray-800"} min-h-screen`}>
   {user?<div className='relative '>
     <div>
-      <img className='w-full   h-45 md:h-60 rounded-2xl p-2' src={user?.coverImage}/>
+      <img className='w-full object-cover relative   h-40 md:h-55 rounded-2xl p-2' src={user?.coverImage}/>
+      <div className={`h-10 cursor-pointer w-10 ${darkMode?"bg-gray-700":"bg-gray-300"} absolute bottom-2 right-4 z-40 flex items-center justify-center rounded-full`}  onClick={()=>setIsSelectCoverImage(true)}><i className="fa-solid fa-camera"></i></div>
     </div>
-   <div className='m-3 absolute items-center flex  gap-6 top-42 md:top-50'>
+  <div className={`flex border-b ${ darkMode?" border-gray-700":"border-gray-200"} absolute items-center w-full flex-wrap p-1  justify-between top-38 md:top-45`}>
+     <div className='m-3 flex items-center gap-6'>
      <div className={`${darkMode?" border-blue-800":"border-black"} backdrop-blur-sm  h-30 md:h-40  w-30 md:w-40 rounded-full border`}>
-      <img className='h-30 md:h-40  w-30 md:w-40 rounded-full' src={user?.profilePicture}/>
+      <img className='h-30 md:h-40 relative  w-30 md:w-40 rounded-full' src={user?.profilePicture}/>
+       <div className={`h-10 cursor-pointer w-10 ${darkMode?"bg-gray-700":"bg-gray-300"} absolute bottom-2 right-4 z-40 flex items-center justify-center rounded-full`}  onClick={()=>setIsSelectCoverImage(true)}><i className="fa-solid fa-camera"></i></div>
 </div>
 <div className=''> 
-  <h4 className='text-xl md:text-3xl font-semibold'>{user?.fullName} <i className="fa-solid fa-pencil text-sm cursor-pointer"></i></h4>
+  <h4 className='text-xl md:text-3xl font-semibold'>{user?.fullName}</h4>
   <h4 className='text-sm md:text-md '>@{user?.fullName}</h4>
   <p className='text-sm text-wrap w-40 md:w-full max-w-auto'>{user?.description?.split(" ").slice(0, 7).join(" ")} <strong onClick={()=>setDescriptionOpen(true)} className='cursor-pointer whitespace-nowrap underline'>{!descriptionOpen&&"..more"}</strong></p>
  <p>
@@ -103,12 +153,7 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
       }`}
     >
       
-      <button
-        onClick={() => setDescriptionOpen(false)}
-        className="absolute top-3 right-3 cursor-pointer"
-      >
-        <i className="fa-regular fa-circle-xmark text-red-400"></i>
-      </button>
+     
 
       <p className="text-sm text-center mt-6 wrap-break-words">
         <strong>Description:</strong>
@@ -120,6 +165,10 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
   </div>
 )}
    </div>
+   <div className='ml-4 md:mr-3'>
+    <button className={`px-3 py-1 rounded-3xl bg-transparent border font-semibold ${darkMode?"border-gray-700":"border-gray-400"}`}>Update Info </button>
+   </div>
+  </div>
   </div>:
   <div className='items-center min-h-screen flex justify-center'>
   <div clasName="flex justify-center items-center text-center flex-col">
@@ -160,7 +209,7 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
       <p className='text-center mt-2'>Don't have an account <button className='underline text-red-400 cursor-pointer font-semibold '>Sign up</button></p>
 </form>
 <button onClick={()=>setLoginForm(false)} className=' absolute top-5 cursor-pointer  left-60 md:left-90'>
-        <i className="fa-regular fa-circle-xmark"></i>
+        <i className="fa-solid fa-xmark"></i>
         </button>
 
 
@@ -169,9 +218,33 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
   }
   {
     Loading &&
-       <div className="bg-black/30 justify-center flex items-center z-50 h-full fixed inset-0">
+       <div className="bg-black/50 justify-center flex items-center z-50 h-full fixed inset-0">
       <div className={`${darkMode?"bg-gray-800 ":"bg-gray-300"} rounded-md  animate-pulse p-2 h-20 w-40`}>
 <p className={`font-bold text-center m-4 ${darkMode?"text-green-400":"text-green-600"}`}><i className="fa-solid fa-spinner animate-spin"></i></p>
+      </div>
+      </div>
+}
+
+  {
+    isSelectCoverImage &&
+       <div className="bg-black/50 justify-center flex items-center z-40 h-full fixed inset-0">
+      <div className={`${darkMode?"bg-gray-800 ":"bg-gray-300"} relative rounded-md flex items-center flex-col justify-center   p-2 h-60 w-60`}>
+<div className={`h-15 w-15 ${darkMode?"bg-gray-700":"bg-gray-300"} relative  flex items-center justify-center rounded-full`}><i className="fa-solid fa-camera">
+  <input type='file' className=' absolute inset-0 opacity-0 cursor-pointer'
+  onChange={(e)=>setUpdateCoverImage(e.target.files[0])}
+  accept="image/*" />
+</i>
+</div><br/>
+{error?<p className='text-sm text-red-500 text-center'>{error}</p>:<p className='text-xs text-center'>{updateCoverImage?.name}</p>}
+<br/>
+
+ <button
+        onClick={()=>setIsSelectCoverImage(false)}
+        className="absolute top-3 right-3 cursor-pointer"
+      >
+        <i className="fa-solid fa-xmark text-red-400"></i>
+      </button>
+      <button onClick={()=>handleUpdateCoverIamge()} className={`${darkMode?"bg-red-500 border-gray-700 text-white":"bg-red-500 border-gray-100 text-white"} py-1 px-3 mt-2 rounded-lg shadow-md poppins-extralight cursor-pointer hover:shadow-lg transition-shadow duration-300`}>Update Image</button>
       </div>
       </div>
 }
