@@ -3,7 +3,7 @@ import {useTheme} from "../Contexts/themeContext"
 import {useState} from 'react'
 import { useUser } from '../Contexts/userContext'
 import { useVideo } from '../Contexts/videoContext'
-
+import {ProfileVideos} from '../components/videosProfile'
 function ProfilePage() {
   const { darkMode, toggleTheme } = useTheme();
   const {videos,setVideos} = useVideo()
@@ -167,7 +167,51 @@ const handleUpdateProfileImage=async()=>{
    
   }
 
+  {/*info update code*/ }
+  const [updateInfo,setUpdateInfo]=useState(false)
+  const [updateFullName,setUpdateFullName]=useState("")
+  const [updateDescription,setUpdateDescription]=useState("")
 
+  const handleUpdateInfo=async()=>{
+    if(!(updateDescription.trim()||updateFullName.trim())){
+      setError("For update one is required")
+      return
+    }
+
+    try {
+      setLoading(true)
+      const res=await fetch("http://localhost:4000/user/change-full-name",{
+        method:"PATCH",
+        credentials:"include",
+        headers: {
+  "Content-Type": "application/json"
+},
+        body:JSON.stringify({
+          fullName:updateFullName,
+          description:updateDescription
+        })
+      })
+
+      const data=await res.json()
+      if(res.ok){
+        setUpdateInfo(false)
+        setLoading(false)
+        window.location.reload()
+      }
+      else{
+        setLoading(false)
+        console.log(data?.message)
+        setError(data?.message)
+        return
+      }
+    } catch (error) {
+      console.log(error)
+setError("Error while changing..")
+return
+    }
+    finally{
+    setLoading(false)
+  }}
 
 const [descriptionOpen,setDescriptionOpen]=useState(false)
   return (
@@ -180,13 +224,24 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
   <div className={`flex border-b ${ darkMode?" border-gray-700":"border-gray-200"} absolute items-center w-full flex-wrap p-1  justify-between top-38 md:top-45`}>
      <div className='m-3 flex items-center gap-6'>
      <div className={`${darkMode?" border-blue-800":"border-black"} backdrop-blur-sm  h-30 md:h-40  w-30 md:w-40 rounded-full border`}>
-      <img className='h-30 md:h-40 relative  w-30 md:w-40 rounded-full' src={user?.profilePicture}/>
+      <img className='h-30 md:h-40 relative object-cover  w-30 md:w-40 rounded-full' src={user?.profilePicture}/>
        <div className={`h-7 cursor-pointer w-7 ${darkMode?"bg-gray-700":"bg-gray-300"} absolute bottom-2 right-4 z-40 flex items-center justify-center rounded-full`}  onClick={()=>setIsSelectProfileImage(true)}><i className="fa-solid fa-camera"></i></div>
 </div>
 <div className=''> 
   <h4 className='text-xl md:text-3xl font-semibold'>{user?.fullName}</h4>
-  <h4 className='text-sm md:text-md '>@{user?.fullName}</h4>
-  <p className='text-sm text-wrap w-40 md:w-full max-w-auto'>{user?.description?.split(" ").slice(0, 7).join(" ")} <strong onClick={()=>setDescriptionOpen(true)} className='cursor-pointer whitespace-nowrap underline'>{!descriptionOpen&&"..more"}</strong></p>
+  <h4 className='text-sm md:text-md '>@{user?.userName}</h4>
+<p className="text-sm w-40 md:w-full">
+  { `${user?.description?.split(" ").slice(0, 7).join(" ")}...`}
+
+  {!descriptionOpen && (
+    <strong
+      onClick={() => setDescriptionOpen(true)}
+      className="cursor-pointer whitespace-nowrap underline ml-1"
+    >
+      more
+    </strong>
+  )}
+</p>
  <p>
  </p> 
 </div>
@@ -214,7 +269,7 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
 )}
    </div>
    <div className='ml-4 md:mr-3'>
-    <button className={`px-3 py-1 rounded-3xl bg-transparent border font-semibold ${darkMode?"border-gray-700":"border-gray-400"}`}>Update Info </button>
+    <button onClick={()=>setUpdateInfo(true)} className={`px-3 cursor-pointer py-1 rounded-3xl bg-transparent border font-semibold ${darkMode?"border-gray-700 hover:border-gray-800":"border-gray-400 hover:border-gray-500"}`}>Update Info </button>
    </div>
   </div>
   </div>:
@@ -257,6 +312,35 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
       <p className='text-center mt-2'>Don't have an account <button className='underline text-red-400 cursor-pointer font-semibold '>Sign up</button></p>
 </form>
 <button onClick={()=>setLoginForm(false)} className=' absolute top-5 cursor-pointer  left-60 md:left-90'>
+        <i className="fa-solid fa-xmark"></i>
+        </button>
+
+
+      </div>
+      </div>
+  }
+
+
+ {updateInfo&&
+  <div className="bg-black/30 justify-center flex items-center z-50 h-full fixed inset-0">
+      <div className={`${darkMode?"bg-gray-800 ":"bg-gray-100"} relative rounded-md  p-5 `}>
+<div className="text-center">
+  <p className='text-xs md:text-sm mt-1'>Change Full Name And Description</p>
+</div>
+<br/><br/>
+<form onSubmit={handleUpdateInfo}>
+<div className='flex flex-col gap-3'>
+<input  type="text" placeholder='Full Name' value={updateFullName} onChange={(e)=>setUpdateFullName(e.target.value)} className={`${darkMode?"bg-gray-800 border-gray-700 placeholder-gray-200 text-white":"bg-gray-200 border-gray-200 placeholder-gray-800 text-black"} py-2 px-2 w-60 md:w-90  rounded-lg outline-none border`} />
+
+<input  type={"text"} placeholder='Description' value={updateDescription} onChange={(e)=>setUpdateDescription(e.target.value)} className={`${darkMode?"bg-gray-800 border-gray-700 placeholder-gray-200 text-white":"bg-gray-200 border-gray-200 placeholder-gray-800 text-black"} w-60 md:w-90 py-2 px-2 rounded-lg outline-none border`} />
+</div>
+{error&&
+<p className='text-sm text-red-600 p-1'>{error}</p>
+}
+<br/>
+<button type='submit' className={`${darkMode?"bg-red-500 border-gray-700 text-white":"bg-red-500 border-gray-100 text-white"} py-2 px-3 w-full rounded-lg shadow-md poppins-extralight cursor-pointer hover:shadow-lg transition-shadow duration-300`}>Update</button>
+</form>
+<button onClick={()=>setUpdateInfo(false)} className=' absolute text-red-500 top-3 cursor-pointer  right-2'>
         <i className="fa-solid fa-xmark"></i>
         </button>
 
@@ -328,9 +412,11 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
       </div>
       </div>
 }
+<ProfileVideos />
 
  </main>
-  )
+
+)
 }
 
 export default ProfilePage
