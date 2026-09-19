@@ -78,7 +78,7 @@ setLoading(false)
   {/*changeCoverImage section code */}
   const [isSelectCoverImage,setIsSelectCoverImage]=useState(false)
   const [updateCoverImage,setUpdateCoverImage]=useState()
-  const handleUpdateCoverIamge=async()=>{
+  const handleUpdateCoverImage=async()=>{
     if(!updateCoverImage){
       setError("please select cover Image")
       return
@@ -107,11 +107,12 @@ setLoading(false)
     }
     setUpdateCoverImage()
  } catch (error) {
+      setError("Error while uploading! update your time")
   console.log(error)
+  return
  }
  finally{
     setLoading(false)
-   setIsSelectCoverImage(false)
    }
 
 
@@ -120,6 +121,51 @@ setLoading(false)
    
   }
 
+  {/*changeProfileImage section code */}
+  const [isSelectProfileImage,setIsSelectProfileImage]=useState(false)
+  const [updateProfileImage,setUpdateProfileImage]=useState()
+const handleUpdateProfileImage=async()=>{
+    if(!updateProfileImage){
+      setError("please select cover Image")
+      return
+    }
+    const formData = new FormData();
+
+    formData.append("profilePicture",updateProfileImage)
+
+ try {
+  setLoading(true)
+     const res =await fetch("http://localhost:4000/user/change-profile-picture",{
+      method:"PATCH",
+      credentials:"include",
+      body:formData
+    })
+    const data= await res.json()
+
+    if(res.ok){
+      setIsSelectProfileImage(false)
+      setLoading(false)
+      window.location.reload()
+    }
+    else{
+      setError("Error while uploading! update your time")
+      return
+    }
+    setUpdateProfileImage()
+ } catch (error) {
+  console.log(error)
+      setError("Error while uploading! update your time")
+  return
+ }
+ finally{
+    setLoading(false)
+   }
+
+
+
+
+   
+  }
 
 
 
@@ -135,7 +181,7 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
      <div className='m-3 flex items-center gap-6'>
      <div className={`${darkMode?" border-blue-800":"border-black"} backdrop-blur-sm  h-30 md:h-40  w-30 md:w-40 rounded-full border`}>
       <img className='h-30 md:h-40 relative  w-30 md:w-40 rounded-full' src={user?.profilePicture}/>
-       <div className={`h-10 cursor-pointer w-10 ${darkMode?"bg-gray-700":"bg-gray-300"} absolute bottom-2 right-4 z-40 flex items-center justify-center rounded-full`}  onClick={()=>setIsSelectCoverImage(true)}><i className="fa-solid fa-camera"></i></div>
+       <div className={`h-7 cursor-pointer w-7 ${darkMode?"bg-gray-700":"bg-gray-300"} absolute bottom-2 right-4 z-40 flex items-center justify-center rounded-full`}  onClick={()=>setIsSelectProfileImage(true)}><i className="fa-solid fa-camera"></i></div>
 </div>
 <div className=''> 
   <h4 className='text-xl md:text-3xl font-semibold'>{user?.fullName}</h4>
@@ -160,7 +206,9 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
         <br />
         {user?.description}
       </p>
-
+<button onClick={()=>setDescriptionOpen(false)} className=' absolute top-3 cursor-pointer text-red-500 right-2'>
+        <i className="fa-solid fa-xmark"></i>
+        </button>
     </div>
   </div>
 )}
@@ -228,27 +276,58 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
   {
     isSelectCoverImage &&
        <div className="bg-black/50 justify-center flex items-center z-40 h-full fixed inset-0">
-      <div className={`${darkMode?"bg-gray-800 ":"bg-gray-300"} relative rounded-md flex items-center flex-col justify-center   p-2 h-60 w-60`}>
-<div className={`h-15 w-15 ${darkMode?"bg-gray-700":"bg-gray-300"} relative  flex items-center justify-center rounded-full`}><i className="fa-solid fa-camera">
+      <div className={`${darkMode?"bg-gray-800 ":"bg-gray-300"} relative rounded-md flex items-center flex-col justify-center   p-2 h-75 w-75`}>
+        <h4>Select Cover Image</h4><br/>
+
+<div className={`h-15 w-15 ${darkMode?"bg-gray-700":"bg-gray-100 text-black"} relative  flex items-center justify-center rounded-full`}><i className="fa-solid fa-camera">
   <input type='file' className=' absolute inset-0 opacity-0 cursor-pointer'
   onChange={(e)=>setUpdateCoverImage(e.target.files[0])}
   accept="image/*" />
 </i>
 </div><br/>
-{error?<p className='text-sm text-red-500 text-center'>{error}</p>:<p className='text-xs text-center'>{updateCoverImage?.name}</p>}
+{error?<p className='text-xs mx-w-65 text-red-500 text-center'>{error}</p>:<p className='text-xs text-center mx-w-65'>{updateCoverImage?.name}</p>}
 <br/>
 
  <button
-        onClick={()=>setIsSelectCoverImage(false)}
+        onClick={()=>{
+          setIsSelectCoverImage(false)
+        setUpdateCoverImage()
+        }}
         className="absolute top-3 right-3 cursor-pointer"
       >
         <i className="fa-solid fa-xmark text-red-400"></i>
       </button>
-      <button onClick={()=>handleUpdateCoverIamge()} className={`${darkMode?"bg-red-500 border-gray-700 text-white":"bg-red-500 border-gray-100 text-white"} py-1 px-3 mt-2 rounded-lg shadow-md poppins-extralight cursor-pointer hover:shadow-lg transition-shadow duration-300`}>Update Image</button>
+      <button onClick={()=>handleUpdateCoverImage()} className={`${darkMode?"bg-red-500 border-gray-700 text-white":"bg-red-500 border-gray-100 text-white"} py-1 px-3 mt-2 rounded-lg shadow-md poppins-extralight cursor-pointer hover:shadow-lg transition-shadow duration-300`}>Update Image</button>
       </div>
       </div>
 }
+  {
+    isSelectProfileImage &&
+       <div className="bg-black/50 justify-center flex items-center z-40 h-full fixed inset-0">
+      <div className={`${darkMode?"bg-gray-800 ":"bg-gray-300"} relative rounded-md flex items-center flex-col justify-center   p-2 h-75 w-75`}>
+        <h4>Select Profile Picture</h4><br/>
+<div className={`h-15 w-15 ${darkMode?"bg-gray-700":"bg-gray-100 text-black"} relative  flex items-center justify-center rounded-full`}><i className="fa-solid fa-camera">
+  <input type='file' className=' absolute inset-0 opacity-0 cursor-pointer'
+  onChange={(e)=>setUpdateProfileImage(e.target.files[0])}
+  accept="image/*" />
+</i>
+</div><br/>
+{error?<p className='text-xs mx-w-65 text-red-500 text-center'>{error}</p>:<p className='text-xs text-center mx-w-65'>{updateProfileImage?.name}</p>}
+<br/>
 
+ <button
+        onClick={()=>{
+          setIsSelectProfileImage(false)
+          setUpdateProfileImage()
+        }}
+        className="absolute top-3 right-3 cursor-pointer"
+      >
+        <i className="fa-solid fa-xmark text-red-400"></i>
+      </button>
+      <button onClick={()=>handleUpdateProfileImage()} className={`${darkMode?"bg-red-500 border-gray-700 text-white":"bg-red-500 border-gray-100 text-white"} py-1 px-3 mt-2 rounded-lg shadow-md poppins-extralight cursor-pointer hover:shadow-lg transition-shadow duration-300`}>Update Image</button>
+      </div>
+      </div>
+}
 
  </main>
   )
