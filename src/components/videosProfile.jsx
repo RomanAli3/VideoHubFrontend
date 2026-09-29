@@ -59,14 +59,16 @@ function ProfileVideos(){
   return `${days}d ago`;
 };
     return(
-        <main className={` transition-colors absolute top-120 duration-300 ${darkMode?"bg-gray-900 text-white":"bg-white text-gray-800"} `}>
-           <div className="flex flex-wrap ">
+        <main className={` transition-colors absolute top-100 md:top-120 duration-300 ${darkMode?"bg-gray-900 text-white":"bg-white text-gray-800"} `}>
+            <h3 className="text-2xl font-bold  ml-6 ">Videos</h3>
+
+           <div className="flex flex-wrap gap-2  m-3">
             {video?.map((video)=>(
-                <div key={video._id} className={`${darkMode?"text-white hover:bg-gray-800 p-2 ":"text-black bg-gray-50 hover:bg-gray-100 p-2 " }cursor-pointer rounded-sm  overflow-hidden`} >
-            <img src={video.thumbnailUrl} alt={video.title} className="w-full   shadow-sm  rounded-sm h-48 object-cover" />
-            <span className="bg-black p-1 relative bottom-8  left-2 rounded-sm shadow-md text-white"> {Math.round(video.duration)} sec</span>
+              video?  <div key={video._id} className={`${darkMode?"text-white hover:bg-gray-800 p-2 ":"text-black bg-gray-50 hover:bg-gray-200 p-2 " }cursor-pointer flex gap-2 flex-row md:flex-col rounded-sm  overflow-hidden relative`} >
+            <img src={video.thumbnailUrl} alt={video.title} className="w-45 md:w-65   shadow-sm  rounded-sm h-25 md:h-35 " />
+            <span className="bg-black p-1 absolute text-sm md:bottom-22 bottom-2 m w-13 left-2 rounded-sm shadow-md text-white"> {Math.round(video.duration)} sec</span>
             <div className="p-1">
-              <h2 className="text-md font-semibold mb-2">{video.title}</h2>
+              <h2 className="text-sm md:text-md font-semibold text-wrap mb-2">{video.title}</h2>
               <div className="flex justify-between">
               <span className="text-sm flex gap-5">
                   <p className=""><strong>Views: </strong>{video.views}</p>
@@ -90,6 +92,9 @@ function ProfileVideos(){
 </span>
                 </div>
             </div>
+          </div>:<div className="flex justify-center items-center">
+             <button className=
+            {`px-3  py-1 rounded-xl border cursor-pointer ${darkMode?"bg-gray-800 border-gray-700":"bg-gray-100 border-gray-100"}`}><i className="fa-solid fa-plus"></i> Create</button>
           </div>
             ))}
             </div> 
