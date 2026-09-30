@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useTheme } from "../Contexts/themeContext"
-
+import { useUser } from '../Contexts/userContext'
 function ProfileVideos(){
       const { darkMode, toggleTheme } = useTheme();
+        const {user,setUser} = useUser()
+  
     const [Loading,setLoading]=useState(false)
     const [video,setVideo]=useState()
     const [copylink ,setCopylink] = useState(null)
     function copyVideoLink(link){
       navigator.clipboard.writeText(link)
     }
-    
     const [linkCopied,setLinkCopied]=useState(false)
+    
     
     function setLinkPopup(){
       setLinkCopied(true)
@@ -60,22 +62,28 @@ function ProfileVideos(){
 };
     return(
         <main className={` transition-colors absolute top-100 md:top-120 duration-300 ${darkMode?"bg-gray-900 text-white":"bg-white text-gray-800"} `}>
-            <h3 className="text-2xl font-bold  ml-6 ">Videos</h3>
+{user?
+            <h3 className="text-2xl font-bold  ml-6 ">Videos</h3>:
+       ""
 
+}
            <div className="flex flex-wrap gap-2  m-3">
             {video?.map((video)=>(
-              video?  <div key={video._id} className={`${darkMode?"text-white hover:bg-gray-800 p-2 ":"text-black bg-gray-50 hover:bg-gray-200 p-2 " }cursor-pointer flex gap-2 flex-row md:flex-col rounded-sm  overflow-hidden relative`} >
-            <img src={video.thumbnailUrl} alt={video.title} className="w-45 md:w-65   shadow-sm  rounded-sm h-25 md:h-35 " />
-            <span className="bg-black p-1 absolute text-sm md:bottom-22 bottom-2 m w-13 left-2 rounded-sm shadow-md text-white"> {Math.round(video.duration)} sec</span>
+              video?  <div key={video._id} className={`${darkMode?"text-white hover:bg-gray-800 p-2 ":"text-black bg-gray-50 hover:bg-gray-200 p-2 " }cursor-pointer flex gap-2 flex-row md:flex-col rounded-sm  overflow-hidden  relative`} >
+            <img src={video.thumbnailUrl} alt={video.title} className="w-44 md:w-65   shadow-sm  rounded-sm h-25 md:h-35 " />
+            <span className="bg-black p-1 absolute text-sm  md:bottom-22 bottom-2 m w-13 left-2 rounded-sm shadow-md text-white"> {Math.round(video.duration)} sec</span>
             <div className="p-1">
-              <h2 className="text-sm md:text-md font-semibold text-wrap mb-2">{video.title}</h2>
-              <div className="flex justify-between">
-              <span className="text-sm flex gap-5">
+              <h2 className="text-xs md:text-sm font-semibold line-clamp-2 mb-2">{video.title}</h2>
+              <div className="flex gap-8 justify-between">
+              <span className="text-xs md:text-sm flex gap-5">
                   <p className=""><strong>Views: </strong>{video.views}</p>
                 <p>{timeAgo(video.createdAt)}</p>
               </span>
          <span className="text-sm mb-5 relative">
-  <button onClick={() => setCopylink(copylink===video._id?null:video._id)}>
+  <button onClick={() =>{
+     setCopylink(copylink===video._id?null:video._id)
+
+  }}>
     <i className="fa-solid fa-ellipsis-vertical cursor-pointer"></i>
   </button>
 
@@ -85,10 +93,11 @@ function ProfileVideos(){
       setLinkPopup()
       setCopylink(null)
 
-    }} className="absolute right-3 top-3 bg-black text-white p-2 duration-300  rounded-sm whitespace-nowrap">
+    }} className="absolute right-3 top-5 bg-black text-white p-1 duration-300  rounded-sm whitespace-nowrap">
       Copy link
     </p>
   )}
+ 
 </span>
                 </div>
             </div>

@@ -12,6 +12,75 @@ function ProfilePage() {
   const {user,setUser} = useUser()
   const [Loading,setLoading] = useState(false)
 
+{/* register section code */ }
+  const [registerForm,setRegisterForm]=useState(false)
+
+  const [registerUserName,setRegisterUserName]=useState("")
+  const [registerEmail,setRegisterEmail]=useState("")
+  const [registerPassword,setRegisterPassword]=useState("")
+  const [registerDescription,setRegisterDescription]=useState("")
+  const [registerFullName,setRegisterFullName]=useState("")
+  const [registerProfilePic,setRegisterProfilePic]=useState()
+  const [registerCoverImage,setRegisterCoverImage]=useState()
+
+  const handleRegister=async (e)=>{
+   e.preventDefault()
+   if(!registerUserName.trim()||!registerEmail.trim()||!registerPassword.trim()||
+   !registerFullName.trim()||!registerDescription.trim()){
+    setError("All fields are required")
+    return
+  }
+  if(registerPassword.length<6){
+    setError("password must be 6 characters")
+    return
+  }
+  if(!registerProfilePic){
+    setError("Profile picture is required")
+    return
+  }
+  if(!registerCoverImage){
+    setError("Cover image is required")
+    return
+  }
+
+  const formData = new FormData()
+  formData.append("userName",registerUserName)
+  formData.append("fullName",registerFullName)
+  formData.append("email",registerEmail)
+  formData.append("description",registerDescription)
+  formData.append("password",registerPassword)
+  formData.append("profilePicture",registerProfilePic)
+  formData.append("coverImage",registerCoverImage)
+  try {
+    setError("")
+    setLoading(true)
+    const res=await fetch('http://localhost:4000/user/register',{
+      method:"POST",
+      body:formData
+    })
+
+    const data = await res.json()
+    if(res.ok){
+      setRegisterForm(false)
+      console.log(data)
+      setLoginForm(true)
+      setError("Account registered ! login now")
+    }
+    else{
+      setError(data.message)
+      console.log(data.message)
+      setLoading(false)
+      return
+    }
+    
+  } catch (error) {
+    console.log(error)
+  }
+  finally{
+    setLoading(false)
+  }
+  }
+
 {/*Login section code */}
   const [LoginUsernameOrEmail,setLoginUsernameOrEmail] = useState("")
   const [LoginPassword,setLoginPassword] = useState("")
@@ -312,12 +381,169 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
       <br/>
       <button type='submit' className={`${darkMode?"bg-red-500 border-gray-700 text-white":"bg-red-500 border-gray-100 text-white font-semibold"} py-2 px-3 w-full rounded-lg shadow-md poppins-extralight cursor-pointer hover:shadow-lg transition-shadow duration-300`}>Sign in</button>
       <br/>
-      <p className='text-center mt-2'>Don't have an account <button className='underline text-red-400 cursor-pointer font-semibold '>Sign up</button></p>
+      <p className='text-center mt-2'>Don't have an account <button onClick={()=>{
+        setLoginForm(false)
+        setError("")
+        setRegisterForm(true)
+      }} className='underline text-red-400 cursor-pointer font-semibold '>Sign up</button></p>
 </form>
-<button onClick={()=>{
+<button  onClick={()=>{
   setLoginForm(false)
   setError("")
+  
+  
 }} className=' absolute top-5 cursor-pointer  left-60 md:left-90'>
+        <i className="fa-solid fa-xmark"></i>
+        </button>
+
+
+      </div>
+      </div>
+  }
+
+
+   {registerForm&&
+  <div className="bg-black/30 justify-center flex items-center m-2 z-50 h-full fixed inset-0">
+      <div className={`${darkMode?"bg-gray-800 ":"bg-gray-100"} relative rounded-md  p-5 `}>
+<div className="flex justify-center">
+  <span className="flex justify-center items-center">
+    <img src="/favicon.png" className="h-15 md:h-18"/>
+<h2 className='text-xl md:text-2xl font-bold'>VideoHub</h2>
+  </span>
+</div><br/>
+<div className="text-center">
+  <p className=' text-2xl md:text-3xl font-semibold'>Welcome to VideoHub</p>
+  <p className='text-sm mt-1'>Register your account</p>
+</div>
+<br/><br/>
+<form onSubmit={handleLogin}>
+
+<div className="grid  grid-cols-2  gap-2">
+
+  <input
+    required
+    type="text"
+    placeholder="Username"
+    value={registerUserName}
+    onChange={(e) => setRegisterUserName(e.target.value)}
+    className={`${darkMode
+      ? "bg-gray-800 border-gray-700 placeholder-gray-200 text-white"
+      : "bg-gray-200 border-gray-200 placeholder-gray-800 text-black"
+    } py-2 px-2 w-full rounded-lg outline-none border`}
+  />
+
+  <input
+    required
+    type="email"
+    placeholder="Email"
+    value={registerEmail}
+    onChange={(e) => setRegisterEmail(e.target.value)}
+    className={`${darkMode
+      ? "bg-gray-800 border-gray-700 placeholder-gray-200 text-white"
+      : "bg-gray-200 border-gray-200 placeholder-gray-800 text-black"
+    } py-2 px-2 w-full rounded-lg outline-none border`}
+  />
+
+  <input
+    required
+    type="text"
+    placeholder="Full Name"
+    value={registerFullName}
+    onChange={(e) => setRegisterFullName(e.target.value)}
+    className={`${darkMode
+      ? "bg-gray-800 border-gray-700 placeholder-gray-200 text-white"
+      : "bg-gray-200 border-gray-200 placeholder-gray-800 text-black"
+    } py-2 px-2 w-full rounded-lg outline-none border`}
+  />
+
+
+  <input
+    required
+    type={showPassword ? "text" : "password"}
+    placeholder="Password"
+    value={registerPassword}
+    onChange={(e) => setRegisterPassword(e.target.value)}
+    className={`${darkMode
+      ? "bg-gray-800 border-gray-700 placeholder-gray-200 text-white"
+      : "bg-gray-200 border-gray-200 placeholder-gray-800 text-black"
+    } py-2 px-2 w-full rounded-lg outline-none border`}
+  />
+
+  
+ <input
+    required
+    type="text"
+    placeholder="Description"
+    value={registerDescription}
+    onChange={(e) => setRegisterDescription(e.target.value)}
+    className={`${darkMode
+      ? "bg-gray-800 border-gray-700 placeholder-gray-200 text-white"
+      : "bg-gray-200 border-gray-200 placeholder-gray-800 text-black"
+    } py-2 px-2 w-full rounded-lg outline-none border`}
+  />
+
+ <div className={`${darkMode
+      ? "bg-gray-800 border-gray-700 text-white"
+      : "bg-gray-200 border-gray-200 text-black"
+    } py-2 px-2 w-full   rounded-lg outline-none border`}>
+  <label className='w-full cursor-pointer' for="profile-upload" >
+    Profile Picture
+    </label>
+   <input
+   id='profile-upload'
+    required
+    type="file"
+    accept="image/*"
+    onChange={(e) => setRegisterProfilePic(e.target.files[0])}
+    className={`${darkMode
+      ? "bg-gray-800 border-gray-700 text-white"
+      : "bg-gray-200 border-gray-200 text-black"
+    } py-2 px-2 w-full  hidden rounded-lg outline-none border`}
+  />
+ </div>
+
+  <div className={`${darkMode
+      ? "bg-gray-800 border-gray-700 text-white"
+      : "bg-gray-200 border-gray-200 text-black"
+    } py-2 px-2 w-full   rounded-lg outline-none border`}>
+  <label className='w-full cursor-pointer' for="coverImage-upload" >
+    Cover Image
+    </label>
+   <input
+   id='coverImage-upload'
+    required
+    type="file"
+    accept="image/*"
+    onChange={(e) => setRegisterCoverImage(e.target.files[0])}
+    className={`${darkMode
+      ? "bg-gray-800 border-gray-700 text-white"
+      : "bg-gray-200 border-gray-200 text-black"
+    } py-2 px-2 w-full  hidden rounded-lg outline-none border`}
+  />
+ </div>
+</div>
+
+{error&&
+<p className='text-sm text-red-600 p-1'>{error}</p>
+}
+<br/>
+      <span className='p-2 flex items-center gap-1'><input onChange={(e)=>setShowPassword(!showPassword)} type='checkbox' />
+      <label className='text-sm'>Show password</label>
+      </span>
+      <br/>
+      <button type='submit' className={`${darkMode?"bg-red-500 border-gray-700 text-white":"bg-red-500 border-gray-100 text-white font-semibold"} py-2 px-3 w-full rounded-lg shadow-md poppins-extralight cursor-pointer hover:shadow-lg transition-shadow duration-300`}>Sign up</button>
+      <br/>
+      <p className='text-center mt-2'>Already have an account <button onClick={()=>{
+         setLoginForm(true)
+        setError("")
+        setRegisterForm(false)
+      }
+      } className='underline text-red-400 cursor-pointer font-semibold '>Sign in</button></p>
+</form>
+<button onClick={()=>{
+  setRegisterForm(false)
+  setError("")
+}} className=' absolute top-5 cursor-pointer  right-3'>
         <i className="fa-solid fa-xmark"></i>
         </button>
 
