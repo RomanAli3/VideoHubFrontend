@@ -290,7 +290,7 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
       <img className='w-full object-cover relative   h-40 md:h-55 rounded-2xl p-2' src={user?.coverImage}/>
       <div className={`h-10 cursor-pointer w-10 ${darkMode?"bg-gray-700":"bg-gray-300"} absolute bottom-2 right-4 z-40 flex items-center justify-center rounded-full`}  onClick={()=>setIsSelectCoverImage(true)}><i className="fa-solid fa-camera"></i></div>
     </div>
-  <div className={`flex border-b ${ darkMode?" border-gray-700":"border-gray-200"} absolute items-center w-full flex-wrap p-1  justify-between top-32 md:top-45`}>
+  <div className={`flex border-b ${ darkMode?" border-gray-700":"border-gray-300"} absolute items-center w-full flex-wrap p-1  justify-between top-32 md:top-45`}>
      <div className='m-3 flex  items-center gap-1 md:gap-6'>
      <div className={`${darkMode?" border-blue-800":"border-black"} backdrop-blur-sm relative  h-25 md:h-40  w-25 md:w-40 rounded-full border`}>
       <img className='h-25 md:h-40 relative object-cover  w-25 md:w-40 rounded-full' src={user?.profilePicture}/>
@@ -416,7 +416,7 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
   <p className='text-sm mt-1'>Register your account</p>
 </div>
 <br/><br/>
-<form onSubmit={handleLogin}>
+<form onSubmit={handleRegister}>
 
 <div className="grid  grid-cols-2  gap-2">
 

@@ -6,6 +6,7 @@ function ProfileVideos(){
         const {user,setUser} = useUser()
   
     const [Loading,setLoading]=useState(false)
+    const [myVideos,setMyVideos]=useState(null)
     const [video,setVideo]=useState()
     const [copylink ,setCopylink] = useState(null)
     function copyVideoLink(link){
@@ -22,9 +23,9 @@ function ProfileVideos(){
       }, 1000);
     }
     useEffect(()=>{
-        myVideos()
+        myVideosGet()
     },[])
-    const myVideos=async()=>{
+    const myVideosGet=async()=>{
        try {
         setLoading(true)
          const res=await fetch("http://localhost:4000/video/get-user-video",{
@@ -33,7 +34,7 @@ function ProfileVideos(){
         })
         const data=await res.json()
         if(res.ok){
-            setVideo(data?.data)
+            setMyVideos(data?.data)
             setLoading(false)
             console.log(data?.data)
             console.log(data)
@@ -62,9 +63,7 @@ function ProfileVideos(){
 };
     return(
         <main className={` transition-colors absolute top-100 md:top-120 duration-300 ${darkMode?"bg-gray-900 text-white":"bg-white text-gray-800"} `}>
-{user?
-            <h3 className="text-2xl font-bold  ml-6 ">Videos</h3>:
-       ""
+{myVideos&&    <h3 className="text-2xl font-bold  ml-6 ">Videos</h3>
 
 }
            <div className="flex flex-wrap gap-2  m-3">
