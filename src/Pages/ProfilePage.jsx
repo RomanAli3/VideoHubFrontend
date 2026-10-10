@@ -346,7 +346,7 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
   </div>
   </div>:
   <div className='items-center min-h-screen flex justify-center'>
-  <div clasName="flex justify-center items-center text-center flex-col">
+  <div className="flex justify-center items-center text-center flex-col">
     <button onClick={()=>{setLoginForm(true)}} className={`${darkMode?"border-gray-800 text-white":"border-gray-200 text-black"} border mb-8 px-3 py-1 rounded-lg shadow-md poppins-extralight cursor-pointer hover:shadow-lg transition-shadow duration-300`}>
       Sign in <i className="fa-solid fa-arrow-right-to-bracket"></i>
     </button>

@@ -36,7 +36,10 @@ function ProfileVideos(){
         if(res.ok){
             setMyVideos(data?.data)
             setLoading(false)
-            console.log(data?.data)
+            console.log('videos',data?.data)
+          if(data?.data.length==0){
+            setMyVideos(null)
+          }
             console.log(data)
         }
         else{
@@ -62,13 +65,13 @@ function ProfileVideos(){
   return `${days}d ago`;
 };
     return(
-        <main className={` transition-colors absolute top-100 md:top-120 duration-300 ${darkMode?"bg-gray-900 text-white":"bg-white text-gray-800"} `}>
-{myVideos&&    <h3 className="text-2xl font-bold  ml-6 ">Videos</h3>
+        <main className={` transition-colors w-full absolute top-100 md:top-120 duration-300 ${darkMode?"bg-gray-900 text-white":"bg-white text-gray-800"} `}>
+   <h3 className="text-2xl font-semibold  ml-6 ">Videos</h3>
 
-}
-           <div className="flex flex-wrap gap-2  m-3">
-            {video?.map((video)=>(
-              video?  <div key={video._id} className={`${darkMode?"text-white hover:bg-gray-800 p-2 ":"text-black bg-gray-50 hover:bg-gray-200 p-2 " }cursor-pointer flex gap-2 flex-row md:flex-col rounded-sm  overflow-hidden  relative`} >
+
+           <div className={`flex flex-wrap gap-2  m-3`}>
+           {myVideos?.length>0?(myVideos?.map((video)=>(
+<div key={video._id} className={`${darkMode?"text-white hover:bg-gray-800 p-2 ":"text-black bg-gray-50 hover:bg-gray-200 p-2 " }cursor-pointer flex gap-2 flex-row md:flex-col rounded-sm  overflow-hidden  relative`} >
             <img src={video.thumbnailUrl} alt={video.title} className="w-44 md:w-65   shadow-sm  rounded-sm h-25 md:h-35 " />
             <span className="bg-black p-1 absolute text-sm  md:bottom-22 bottom-2 m w-13 left-2 rounded-sm shadow-md text-white"> {Math.round(video.duration)} sec</span>
             <div className="p-1">
@@ -100,11 +103,29 @@ function ProfileVideos(){
 </span>
                 </div>
             </div>
-          </div>:<div className="flex justify-center items-center">
-             <button className=
-            {`px-3  py-1 rounded-xl border cursor-pointer ${darkMode?"bg-gray-800 border-gray-700":"bg-gray-100 border-gray-100"}`}><i className="fa-solid fa-plus"></i> Create</button>
           </div>
-            ))}
+            ))):(<div className="flex flex-col justify-center items-center w-full py-16 gap-3">
+
+  <i className="fa-solid fa-clapperboard text-4xl text-gray-500"></i>
+
+  <h2 className="text-lg font-semibold">
+    No videos uploaded yet
+  </h2>
+
+  <p className="text-sm text-gray-400 text-center max-w-sm">
+    Your videos will appear here once you upload your first video.
+  </p>
+
+  <button
+    onClick={() => navigate("/create")}
+    className={`mt-2 px-4 py-2 rounded-lg border 
+      transition-colors ${darkMode ? "text-white bg-gray-800 hover:bg-gray-700 border-gray-700" : "border-gray-300 bg-gray-200 hover:bg-gray-300 text-black"}`}
+  >
+    <i className="fa-solid fa-plus mr-2"></i>
+    Create Video
+  </button>
+
+</div>)}
             </div> 
               {
     Loading &&

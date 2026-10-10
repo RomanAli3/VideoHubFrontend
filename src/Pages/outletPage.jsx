@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { useEffect } from "react";
 import HeaderSection from "../components/headerSection";
 import { useUser } from "../Contexts/userContext";
-
+import "../App.css"
 function OutletPage() {
   const {user,setUser} = useUser()
 useEffect(() => {
@@ -42,7 +42,7 @@ useEffect(() => {
   
   }
   return (
-    <div>
+    <div className='scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800'>
       <HeaderSection/>
       <Outlet />
     </div>

@@ -20,13 +20,13 @@ function HeaderSection() {
             {`px-3  py-1 rounded-xl border cursor-pointer ${darkMode?"bg-gray-800 border-gray-700":"bg-gray-100 border-gray-100"}`}><i className="fa-solid fa-plus"></i> Create</button>
         </span>
         <span>
-            <NavLink className={({isActive})=>isActive?"text-red-500 ":""} to='/' ><i className="fa-regular fa-house"></i> Home</NavLink>
+            <NavLink className={({isActive})=>isActive?"text-red-400 ":""} to='/' ><i className="fa-regular fa-house"></i> Home</NavLink>
         </span>
           <span>
-            <NavLink className={({isActive})=>isActive?"text-red-500":""} to='/profile' ><i className="fa-regular fa-user"></i> Profile</NavLink>
+            <NavLink className={({isActive})=>isActive?"text-red-400":""} to='/profile' ><i className="fa-regular fa-user"></i> Profile</NavLink>
         </span>
         <span>    
-            <button onClick={toggleTheme} className="bg-transparent px-3 py-1  duration-300">
+            <button onClick={toggleTheme} className="cursor-pointer bg-transparent px-3 py-1  duration-300">
                  {darkMode ? "☀️" : "🌙"}
             </button>
         </span>

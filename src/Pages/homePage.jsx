@@ -1,6 +1,7 @@
 import {useVideo} from "../Contexts/videoContext"
 import { useState,useEffect } from "react"
 import { useTheme } from "../Contexts/themeContext"
+import { useNavigate } from "react-router-dom";
 function HomePage() {
       const { darkMode, toggleTheme } = useTheme();
         const [Loading,setLoading] = useState(false)
@@ -9,6 +10,7 @@ function copyVideoLink(link){
   navigator.clipboard.writeText(link)
 }
 
+const navigate = useNavigate()
 const [linkCopied,setLinkCopied]=useState(false)
 
 function setLinkPopup(){
@@ -28,7 +30,7 @@ function setLinkPopup(){
 
             const videoData = await res.json();
 
-            console.log(videoData.data);
+            console.log('videos',videoData.data);
 
             setVideos(videoData);
         } catch (error) {
@@ -58,11 +60,11 @@ const timeAgo = (date) => {
     <main className={` transition-colors duration-300 ${darkMode?"bg-gray-900 text-white":"bg-white text-gray-800"} min-h-screen`}>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
         {videos?.data?.map((video) => (
-          <div key={video._id} className={`${darkMode?"text-white hover:bg-gray-800 p-2 ":"text-black bg-gray-50 hover:bg-gray-100 p-2 " }cursor-pointer rounded-sm  overflow-hidden`} >
-            <img src={video.thumbnailUrl} alt={video.title} className="w-full   shadow-sm  rounded-sm h-48 object-cover" />
+          <div key={video._id} onClick={()=>navigate(`/play/${video._id}`)} className={`${darkMode?"text-white hover:bg-gray-800 p-2 ":"text-black bg-gray-50 hover:bg-gray-100 p-2 " }cursor-pointer rounded-sm  overflow-hidden`} >
+            <img src={video.thumbnailUrl} alt={video.title} className="w-full   shadow-sm  rounded-md h-48 object-cover" />
             <span className="bg-black p-1 relative bottom-8  left-2 rounded-sm shadow-md text-white"> {Math.round(video.duration)} sec</span>
             <div className="p-1">
-              <h2 className="text-md font-semibold mb-2">{video.title}</h2>
+              <h2 className="text-md font-semibold mb-1">{video.title}</h2>
               <div className="flex justify-between">
               <span className="text-sm flex gap-5">
                   <p className=""><strong>Views: </strong>{video.views}</p>
