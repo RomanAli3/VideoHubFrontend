@@ -6,8 +6,9 @@ function VideoPlayerPage() {
       const { darkMode, toggleTheme } = useTheme();
     
     const id = useParams().videoId; // Get the video ID from the URL parameters
-    console.log("Video ID:", id);
-    const [video, setVideo] = useState(null); // State to hold the video data
+  
+    const [video, setVideo] = useState(null); 
+  //Fetch video data using the video ID 
      const getVideo=async()=>{
         try {
             setLoading(true)
@@ -16,23 +17,99 @@ function VideoPlayerPage() {
             if(res.ok){
                 setVideo(data?.data);
                 console.log("Video state updated:", video);
+               
             } else {
                 console.log("Failed to fetch video data:", data.message);
             }
-        }
+        
+      }
         catch(err){
             console.log(err)
         }finally{
            setLoading(false)
-        } 
+          } 
      }
-     
-     useEffect(()=>{
+      useEffect(()=>{
             getVideo()
         },[])
-        useEffect(() => {
-  console.log("Updated video:", video);
-}, [video]);
+
+
+// Channel information code using video owner id
+    const [channelInformation,setChannelInformation]=useState() 
+    const getChannelInformationById=async()=>{
+      try{
+        setLoading(true)
+        const res=await fetch(`http://localhost:4000/user/user-channel-info/${video?.owner}`);
+        const data = await res.json()
+        if(res.ok){
+          setChannelInformation(data?.data)
+          console.log("Channel information state updated:", channelInformation);
+        }
+        else{
+          console.log("Failed to fetch channel information:", data.message);
+        }
+
+      }
+      catch(err){
+        console.log(err)
+      }finally{
+        setLoading(false)
+      }
+     }
+
+
+// Channel subscriber code using video owner id
+        const [channelSubscriber,setChannelSubscriber]=useState()
+        const [subscriberInfo,setSubscriberInfo]=useState()
+        const getChannelSubscriber=async()=>{
+          try{
+       
+            const res=await fetch(`http://localhost:4000/user/channel-info/${video?.owner}`);
+            const data = await res.json()
+            if(res.ok){
+              setChannelSubscriber(data?.data.subscriber)
+              setSubscriberInfo(data?.data)
+          }else{
+            console.log("Failed to fetch channel subscriber:", data.message);
+          }
+        }
+          catch(err){
+            console.log(err)
+          }
+          
+        }
+        
+
+
+
+  //Subscribe button code
+  const handleSubscribe=async()=>{
+    try{
+      const res=await fetch(`http://localhost:4000/subscribe/subscribe-unSubscribe/${video?.owner}`,{
+        method:"POST",
+        credentials:"include"
+      })
+      const data=await res.json()
+      if(res.ok){
+        console.log(data?.message)
+        getChannelSubscriber()
+      }
+      else{
+        console.log(data?.message)
+      }
+    }
+    catch(err){
+      console.log(err)
+    }
+  }
+
+
+     useEffect(()=>{
+            getChannelInformationById()
+            getChannelSubscriber()
+            
+        },[video]);
+      
   return (
     <main className={` transition-colors  duration-300 ${darkMode?"bg-gray-900 text-white":"bg-white text-gray-800"} min-h-screen`}>
     <div>
@@ -40,7 +117,7 @@ function VideoPlayerPage() {
            {video?.video ? (
         <video
           controls
-           className="w-full max-w-3xl rounded-2xl p-2 h-120 object-contain bg-black"
+           className="w-full max-w-3xl rounded-2xl p-2 h-70 md:h-120 object-contain bg-black"
           src={video.video}
         >
           Your browser does not support the video tag.
@@ -48,7 +125,14 @@ function VideoPlayerPage() {
       ) : (
         <p>Loading video...</p>
       )}
-        <span className="text-xl font-semibold ml-5 mt-2">{video?.title}</span>
+        <span className="text-xl font-semibold m-3 ">{video?.title}</span>
+      <div className={`flex  items-center gap-10 ${darkMode?"text-white":"text-gray-800"}`}>
+          <span className="flex items-center text-sm gap-2 pl-3 p-1"><img className='w-12 h-12 rounded-full' src={channelInformation?.profilePicture}/><p className="first-letter:uppercase "><strong className="text-semibold">{channelInformation?.fullName}</strong><br/>
+        {`${channelSubscriber?.[0]?.subscriber || 0} subscribers `}
+        </p></span>
+        <span><button onClick={()=>handleSubscribe()} className={`${darkMode?"bg-gray-200 border-gray-900  text-black ":"bg-gray-800 border-gray-900  text-white"} border px-3 py-1 rounded-2xl transition-colors duration-300 cursor-pointer`}>Subscribe</button></span>
+      </div>
+        
       </div>
     </div>
        {

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useTheme } from "../Contexts/themeContext"
 import { useUser } from '../Contexts/userContext'
+import { useNavigate } from "react-router-dom";
+
 function ProfileVideos(){
       const { darkMode, toggleTheme } = useTheme();
         const {user,setUser} = useUser()
+        const navigate = useNavigate()
   
     const [Loading,setLoading]=useState(false)
     const [myVideos,setMyVideos]=useState(null)
@@ -13,6 +16,8 @@ function ProfileVideos(){
       navigator.clipboard.writeText(link)
     }
     const [linkCopied,setLinkCopied]=useState(false)
+
+   
     
     
     function setLinkPopup(){
@@ -24,6 +29,7 @@ function ProfileVideos(){
     }
     useEffect(()=>{
         myVideosGet()
+
     },[])
     const myVideosGet=async()=>{
        try {
@@ -37,6 +43,7 @@ function ProfileVideos(){
             setMyVideos(data?.data)
             setLoading(false)
             console.log('videos',data?.data)
+            
           if(data?.data.length==0){
             setMyVideos(null)
           }
@@ -66,12 +73,14 @@ function ProfileVideos(){
 };
     return(
         <main className={` transition-colors w-full absolute top-100 md:top-120 duration-300 ${darkMode?"bg-gray-900 text-white":"bg-white text-gray-800"} `}>
+{
+  user&&
    <h3 className="text-2xl font-semibold  ml-6 ">Videos</h3>
-
+}
 
            <div className={`flex flex-wrap gap-2  m-3`}>
            {myVideos?.length>0?(myVideos?.map((video)=>(
-<div key={video._id} className={`${darkMode?"text-white hover:bg-gray-800 p-2 ":"text-black bg-gray-50 hover:bg-gray-200 p-2 " }cursor-pointer flex gap-2 flex-row md:flex-col rounded-sm  overflow-hidden  relative`} >
+<div onClick={()=>{navigate(`/play/${video._id}`)}} key={video._id} className={`${darkMode?"text-white hover:bg-gray-800 p-2 ":"text-black bg-gray-50 hover:bg-gray-200 p-2 " }cursor-pointer flex gap-2 flex-row md:flex-col rounded-sm  overflow-hidden  relative`} >
             <img src={video.thumbnailUrl} alt={video.title} className="w-44 md:w-65   shadow-sm  rounded-sm h-25 md:h-35 " />
             <span className="bg-black p-1 absolute text-sm  md:bottom-22 bottom-2 m w-13 left-2 rounded-sm shadow-md text-white"> {Math.round(video.duration)} sec</span>
             <div className="p-1">
@@ -104,7 +113,9 @@ function ProfileVideos(){
                 </div>
             </div>
           </div>
-            ))):(<div className="flex flex-col justify-center items-center w-full py-16 gap-3">
+            ))):(
+              user&&
+              <div className="flex flex-col justify-center items-center w-full py-16 gap-3">
 
   <i className="fa-solid fa-clapperboard text-4xl text-gray-500"></i>
 
@@ -118,14 +129,15 @@ function ProfileVideos(){
 
   <button
     onClick={() => navigate("/create")}
-    className={`mt-2 px-4 py-2 rounded-lg border 
+    className={`mt-2 px-4  py-2 rounded-lg border 
       transition-colors ${darkMode ? "text-white bg-gray-800 hover:bg-gray-700 border-gray-700" : "border-gray-300 bg-gray-200 hover:bg-gray-300 text-black"}`}
   >
     <i className="fa-solid fa-plus mr-2"></i>
     Create Video
   </button>
 
-</div>)}
+</div>
+            )}
             </div> 
               {
     Loading &&
