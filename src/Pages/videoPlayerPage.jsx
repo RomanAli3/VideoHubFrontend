@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import  { useTheme } from "../Contexts/themeContext";
 function VideoPlayerPage() {
       const [Loading,setLoading] = useState(false)
@@ -8,6 +8,32 @@ function VideoPlayerPage() {
     const id = useParams().videoId; // Get the video ID from the URL parameters
   
     const [video, setVideo] = useState(null); 
+
+
+    // Function to add a view to the video
+     const addViewInVideo=async()=>{
+    try{
+      const res=await fetch(`http://localhost:4000/video/view/${id}`,{
+        method:"POST",
+      })
+      const data=await res.json()
+      if(res.ok){
+        console.log(data?.message)
+        console.log("View added successfully")
+      }}
+      catch(err){
+        console.log(err)
+      }
+    
+    }
+const viewedVideoId = useRef(null);
+
+useEffect(() => {
+    if (!id || viewedVideoId.current === id) return;
+
+    viewedVideoId.current = id;
+    addViewInVideo();
+}, [id]);
   //Fetch video data using the video ID 
      const getVideo=async()=>{
         try {
@@ -16,8 +42,7 @@ function VideoPlayerPage() {
             const data = await res.json();
             if(res.ok){
                 setVideo(data?.data);
-                console.log("Video state updated:", video);
-               
+                console.log("Video state updated:", video);               
             } else {
                 console.log("Failed to fetch video data:", data.message);
             }
@@ -29,8 +54,11 @@ function VideoPlayerPage() {
            setLoading(false)
           } 
      }
+
+      
       useEffect(()=>{
             getVideo()
+           
         },[])
 
 
@@ -104,11 +132,25 @@ function VideoPlayerPage() {
   }
 
 
+
      useEffect(()=>{
             getChannelInformationById()
-            getChannelSubscriber()
-            
+            getChannelSubscriber()  
         },[video]);
+
+       
+
+        const timeAgo = (date) => {
+  const minutes = Math.floor((Date.now() - new Date(date)) / 60000);
+
+  if (minutes < 60) return `${minutes}mint ago`;
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+};
       
   return (
     <main className={` transition-colors  duration-300 ${darkMode?"bg-gray-900 text-white":"bg-white text-gray-800"} min-h-screen`}>
@@ -132,7 +174,12 @@ function VideoPlayerPage() {
         </p></span>
         <span><button onClick={()=>handleSubscribe()} className={`${darkMode?"bg-gray-200 border-gray-900  text-black ":"bg-gray-800 border-gray-900  text-white"} border px-3 py-1 rounded-2xl transition-colors duration-300 cursor-pointer`}>Subscribe</button></span>
       </div>
-        
+        <div className={`p-3 max-w-3xl ${darkMode?"bg-gray-800 text-white":"bg-gray-200 text-gray-800"} rounded-md m-3`}>
+          <span className="flex gap-8"><p>Views {video?.views}</p> <p>{timeAgo(video?.createdAt)}</p></span>
+          <pre className="font-serif text-sm mt-2">
+            {video?.description}
+          </pre>
+        </div>
       </div>
     </div>
        {
