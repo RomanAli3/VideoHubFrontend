@@ -159,7 +159,7 @@ useEffect(() => {
            {video?.video ? (
         <video
           controls
-           className="w-full max-w-3xl rounded-2xl p-2 h-70 md:h-120 object-contain bg-black"
+           className="w-full max-w-4xl rounded-2xl p-2 h-70 md:h-120 object-contain bg-black"
           src={video.video}
         >
           Your browser does not support the video tag.
@@ -174,7 +174,7 @@ useEffect(() => {
         </p></span>
         <span><button onClick={()=>handleSubscribe()} className={`${darkMode?"bg-gray-200 border-gray-900  text-black ":"bg-gray-800 border-gray-900  text-white"} border px-3 py-1 rounded-2xl transition-colors duration-300 cursor-pointer`}>Subscribe</button></span>
       </div>
-        <div className={`p-3 max-w-3xl ${darkMode?"bg-gray-800 text-white":"bg-gray-200 text-gray-800"} rounded-md m-3`}>
+        <div className={`p-2 max-w-4xl ${darkMode?"bg-gray-800 text-white":"bg-gray-200 text-gray-800"} rounded-md m-3`}>
           <span className="flex gap-8"><p>Views {video?.views}</p> <p>{timeAgo(video?.createdAt)}</p></span>
           <pre className="font-serif text-sm mt-2">
             {video?.description}
