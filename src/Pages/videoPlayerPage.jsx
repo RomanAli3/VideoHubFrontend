@@ -170,8 +170,8 @@ useEffect(() => {
       
   return (
     <main className={` transition-colors  duration-300 ${darkMode?"bg-gray-900 text-white":"bg-white text-gray-800"} min-h-screen`}>
-    <div className='flex w-full'>
-      <div className='w-[90vh] p-2'>
+    <div className='flex w-full flex-wrap'>
+      <div className='w-full md:w-[90vh] p-2'>
            {video?.video ? (
         <video
           controls
@@ -183,16 +183,16 @@ useEffect(() => {
       ) : (
         <p>Loading video...</p>
       )}
-        <span className="text-xl font-semibold m-3 ">{video?.title}</span>
+        <span className="text-xl pt-2 font-semibold m-4 ">{video?.title}</span>
       <div className={`flex  items-center gap-10 ${darkMode?"text-white":"text-gray-800"}`}>
           <span className="flex items-center text-sm gap-2 pl-3 p-1"><img className='w-12 h-12 rounded-full' src={channelInformation?.profilePicture}/><p className="first-letter:uppercase "><strong className="text-semibold">{channelInformation?.fullName}</strong><br/>
         {`${channelSubscriber?.[0]?.subscriber || 0} subscribers `}
         </p></span>
         <span><button onClick={()=>handleSubscribe()} className={`${darkMode?"bg-gray-200 border-gray-900  text-black ":"bg-gray-800 border-gray-900  text-white"} border px-3 py-1 rounded-2xl transition-colors duration-300 cursor-pointer`}>Subscribe</button></span>
       </div>
-        <div className={`p-2 max-w-4xl ${darkMode?"bg-gray-800 text-white":"bg-gray-200 text-gray-800"} rounded-md m-3`}>
+        <div className={`p-1.5 max-w-4xl ${darkMode?"bg-gray-800 text-white":"bg-gray-200 text-gray-800"} rounded-md m-3`}>
           <span className="flex gap-8"><p>Views {video?.views}</p> <p>{timeAgo(video?.createdAt)}</p></span>
-          <pre className="font-serif text-sm mt-2">
+          <pre className="font-serif text-wrap text-sm md:text-sm mt-2 ">
             {video?.description}
           </pre>
         </div>
