@@ -86,7 +86,7 @@ function ProfileVideos(){
             <div className="p-1">
               <h2 className="text-xs md:text-sm font-semibold line-clamp-2 mb-2">{video.title}</h2>
               <div className="flex gap-8 justify-between">
-              <span className="text-xs md:text-sm flex gap-5">
+              <span className="text-xs md:text-sm flex gap-4">
                   <p className=""><strong>Views: </strong>{video.views}</p>
                 <p>{timeAgo(video.createdAt)}</p>
               </span>
@@ -147,6 +147,13 @@ function ProfileVideos(){
       </div>
       </div>
 }
+   {linkCopied&&(
+       <div className="bg-black/30 justify-center flex items-center z-50 h-full fixed inset-0">
+      <div className={`${darkMode?"bg-gray-800 ":"bg-gray-300"} rounded-md  animate-pulse p-2 h-20 w-40`}>
+<p className={`font-bold text-center m-4 ${darkMode?"text-green-400":"text-green-600"}`}>Link Copied<i className="fa-solid fa-clipboard"></i></p>
+      </div>
+      </div>
+     )}
         </main>
     )
 }

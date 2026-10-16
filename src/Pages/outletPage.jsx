@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import { useEffect } from "react";
 import HeaderSection from "../components/headerSection";
 import { useUser } from "../Contexts/userContext";
+import  {useVideo} from  "../Contexts/videoContext"
 import "../App.css"
 function OutletPage() {
   const {user,setUser} = useUser()
@@ -41,6 +42,29 @@ useEffect(() => {
   
   
   }
+
+    const {videos,setVideos} = useVideo()
+        const getVideos = async () => {
+          try {
+    
+              const res = await fetch(
+                  "http://localhost:4000/video/get-all-videos"
+              );
+  
+              const videoData = await res.json();
+  
+              console.log('videos',videoData.data);
+  
+              setVideos(videoData);
+          } catch (error) {
+              console.log(error);
+           
+          }
+      };
+   useEffect(() => {
+  if(!videos){
+    getVideos()}
+  }, []);
   return (
     <div className='scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800'>
       <HeaderSection/>
