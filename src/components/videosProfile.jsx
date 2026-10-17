@@ -85,9 +85,9 @@ function ProfileVideos(){
             <span className="bg-black p-1 absolute text-sm  md:bottom-22 bottom-2 m w-13 left-2 rounded-sm shadow-md text-white"> {Math.round(video.duration)} sec</span>
             <div className="p-1">
               <h2 className="text-xs md:text-sm font-semibold line-clamp-2 mb-2">{video.title}</h2>
-              <div className="flex gap-8 justify-between">
-              <span className="text-xs md:text-sm flex gap-4">
-                  <p className=""><strong>Views: </strong>{video.views}</p>
+              <div className="flex gap-5 ">
+              <span className="text-xs md:text-sm flex gap-3">
+                  <p className=""><strong>Views:</strong>{video.views}</p>
                 <p>{timeAgo(video.createdAt)}</p>
               </span>
          <span className="text-sm mb-5 relative">

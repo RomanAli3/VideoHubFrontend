@@ -11,6 +11,7 @@ function VideoPlayerPage() {
   
     const [video, setVideo] = useState(null); 
 
+    const [descriptionExpend, setDescriptionExpend] = useState(50); // State to control the number of characters displayed in the description
 
     // Function to add a view to the video
      const addViewInVideo=async()=>{
@@ -40,7 +41,7 @@ useEffect(() => {
   //Fetch video data using the video ID 
      const getVideo=async()=>{
         try {
-            setLoading(true)
+        
          const res = await fetch(`http://localhost:4000/video/single-video/${id}`);
             const data = await res.json();
             if(res.ok){
@@ -54,7 +55,7 @@ useEffect(() => {
         catch(err){
             console.log(err)
         }finally{
-           setLoading(false)
+  
           } 
      }
 
@@ -69,7 +70,7 @@ useEffect(() => {
     const [channelInformation,setChannelInformation]=useState() 
     const getChannelInformationById=async()=>{
       try{
-        setLoading(true)
+
         const res=await fetch(`http://localhost:4000/user/user-channel-info/${video?.owner}`);
         const data = await res.json()
         if(res.ok){
@@ -84,7 +85,7 @@ useEffect(() => {
       catch(err){
         console.log(err)
       }finally{
-        setLoading(false)
+
       }
      }
 
@@ -190,11 +191,18 @@ useEffect(() => {
         </p></span>
         <span><button onClick={()=>handleSubscribe()} className={`${darkMode?"bg-gray-200 border-gray-900  text-black ":"bg-gray-800 border-gray-900  text-white"} border px-3 py-1 rounded-2xl transition-colors duration-300 cursor-pointer`}>Subscribe</button></span>
       </div>
-        <div className={`p-1.5 max-w-4xl ${darkMode?"bg-gray-800 text-white":"bg-gray-200 text-gray-800"} rounded-md m-3`}>
-          <span className="flex gap-8"><p>Views {video?.views}</p> <p>{timeAgo(video?.createdAt)}</p></span>
-          <pre className="font-serif text-wrap text-sm md:text-sm mt-2 ">
-            {video?.description}
-          </pre>
+        <div className={`p-1 max-w-4xl ${darkMode?"bg-gray-800 text-white":"bg-gray-200 text-gray-800"} rounded-md m-3`}>
+          <span className="flex gap-8 p-1"><p>Views {video?.views}</p> <p>{timeAgo(video?.createdAt)}</p></span>
+          <p className="text-wrap text-sm  md:text-sm mt-1 p-1">
+           <p > {video?.description.slice(0,descriptionExpend)} <strong onClick={()=>{
+              if(descriptionExpend==50){
+                setDescriptionExpend(video?.description.length)
+              }
+              else{
+                setDescriptionExpend(50)
+              }
+            }} className="underline cursor-pointer">{descriptionExpend<video?.description.length ?"more..":"less"}</strong></p> 
+          </p>
         </div>
       </div>
 

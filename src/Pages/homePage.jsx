@@ -61,7 +61,7 @@ const timeAgo = (date) => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
         {videos?.data?.map((video) => (
           <div key={video._id} onClick={()=>navigate(`/play/${video._id}`)} className={`${darkMode?"text-white hover:bg-gray-800 p-2 ":"text-black bg-gray-50 hover:bg-gray-100 p-2 " }cursor-pointer rounded-sm  overflow-hidden`} >
-            <img src={video.thumbnailUrl} alt={video.title} className="w-full   shadow-sm  rounded-md h-48 object-cover" />
+            <img src={video.thumbnailUrl} alt={video.title} className="w-full   shadow-sm  rounded-md h-53 object-cover" />
             <span className="bg-black p-1 relative bottom-8  left-2 rounded-sm shadow-md text-white"> {Math.round(video.duration)} sec</span>
             <div className="p-1">
               <h2 className="text-md font-semibold mb-1">{video.title}</h2>
