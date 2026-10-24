@@ -64,7 +64,7 @@ useEffect(() => {
    useEffect(() => {
   if(!videos){
     getVideos()}
-  }, []);
+  }, [videos,{}]);
   return (
     <div className='scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800'>
       <HeaderSection/>

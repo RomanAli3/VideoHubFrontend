@@ -1,9 +1,12 @@
 import { NavLink } from "react-router-dom"
 import { useTheme } from "../Contexts/themeContext"
+import {useUser} from "../Contexts/userContext"
 import {useState} from "react"
+
 function HeaderSection() {
       const { darkMode, toggleTheme } = useTheme();
-      const [videoForm,setVideoForm]=useState(false)
+      const [videoForm,setVideoForm]=useState(false);
+      const {user,setUser}=useUser()
 
       //video form inputs 
       const [title,setTitle]=useState("")
@@ -35,6 +38,37 @@ function HeaderSection() {
         if(description.length>300){
           setError("Description should be less than 300 characters")
           return
+        }
+        setLoading(true)
+      const formdata=new FormData()
+        formdata.append("title",title)
+        formdata.append("description",description)
+        formdata.append("video",videoFile)
+        formdata.append("thumbnailUrl",thumbnailFile)
+        try {
+          const res = await fetch("http://localhost:4000/video/upload-video",
+            {
+              method: "POST",
+              body: formdata,
+              credentials: "include"
+            }
+          )
+          const data = await res.json()
+          if(res.ok){
+            console.log(data)
+            setVideoForm(false)
+            setError("")
+            setDescription("")
+            setTitle("")
+            setVideoFile(null)
+            setThumbnailFile(null)
+            setLoading(false)
+          }
+          else{
+            setError(data?.message)
+          }
+        } catch (error) {
+          console.log(error)
         }
     }
   return (
@@ -71,7 +105,7 @@ function HeaderSection() {
     </header>
  {videoForm&&
   <div className={`bg-black/30 justify-center shadow-3xl  flex items-center m-2 z-50 h-full fixed inset-0 ${ darkMode ? "bg-gray-900 text-white border-gray-700" : "bg-white text-gray-900 border-gray-300" } `}>
-      <div className={`${darkMode?"bg-gray-800 shadow-gray-700 ":"bg-gray-100 shadow-gray-400"} relative  shadow-lg rounded-md  p-5 `}>
+     {user? <div className={`${darkMode?"bg-gray-800 shadow-gray-700 ":"bg-gray-100 shadow-gray-400"} relative  shadow-lg rounded-md  p-5 `}>
 <div className="flex justify-center">
   <span className="flex justify-center items-center">
     <img src="/favicon.png" className="h-15 md:h-18"/>
@@ -186,9 +220,18 @@ function HeaderSection() {
         </button>
 
 
+      </div>:<div></div>}
+      {
+    Loading &&
+       <div className="bg-black/50 justify-center flex items-center z-50 h-full fixed inset-0">
+      <div className={`${darkMode?"bg-gray-800 ":"bg-gray-300"} rounded-md  animate-pulse p-2 h-20 w-40`}>
+<p className={`font-bold text-center m-4 ${darkMode?"text-green-400":"text-green-600"}`}><i className="fa-solid fa-spinner animate-spin"></i></p>
       </div>
+      </div>
+}
       </div>
   }
+  
 
 </>
   );

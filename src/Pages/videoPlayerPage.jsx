@@ -171,7 +171,7 @@ useEffect(() => {
       
   return (
     <main className={` transition-colors  duration-300 ${darkMode?"bg-gray-900 text-white":"bg-white text-gray-800"} min-h-screen`}>
-    <div className='flex w-full flex-wrap'>
+    <div className='flex w-full flex-col md:flex-row'>
       <div className='w-full md:w-[90vh] p-2'>
            {video?.video ? (
         <video
@@ -192,8 +192,8 @@ useEffect(() => {
         <span><button onClick={()=>handleSubscribe()} className={`${darkMode?"bg-gray-200 border-gray-900  text-black ":"bg-gray-800 border-gray-900  text-white"} border px-3 py-1 rounded-2xl transition-colors duration-300 cursor-pointer`}>Subscribe</button></span>
       </div>
         <div className={`p-1 max-w-4xl ${darkMode?"bg-gray-800 text-white":"bg-gray-200 text-gray-800"} rounded-md m-3`}>
-          <span className="flex gap-8 p-1"><p>Views {video?.views}</p> <p>{timeAgo(video?.createdAt)}</p></span>
-          <p className="text-wrap text-sm  md:text-sm mt-1 p-1">
+          <span className="flex text-xs md:text-sm gap-8 p-1"><p>Views {video?.views}</p> <p>{timeAgo(video?.createdAt)}</p></span>
+          <p className="text-wrap text-xs  md:text-sm p-1">
            <p > {video?.description.slice(0,descriptionExpend)} <strong onClick={()=>{
               if(descriptionExpend==50){
                 setDescriptionExpend(video?.description.length)
@@ -210,7 +210,7 @@ useEffect(() => {
     {videos?.data?.toReversed().map((video)=>(
 <div onClick={()=>{navigate(`/play/${video._id}`)}} key={video._id} className={` ${darkMode?"text-white hover:bg-gray-800 p-2 ":"text-black bg-gray-50 hover:bg-gray-200 p-2 " }cursor-pointer flex gap-2 flex-row md:flex-row rounded-sm  overflow-hidden  relative`} >
             <img src={video.thumbnailUrl} alt={video.title} className="w-44 md:w-65   shadow-sm  rounded-sm h-25 md:h-35 " />
-            <span className="bg-black p-1 absolute text-sm  md:bottom-22 bottom-2 m w-13 left-2 rounded-sm shadow-md text-white"> {Math.round(video.duration)} sec</span>
+            <span className="bg-black p-1 absolute md:top-30 text-sm top-22  md:left-53 m w-13 left-32 rounded-sm shadow-md text-white"> {Math.round(video.duration)} sec</span>
             <div className="p-1">
               <h2 className="text-xs md:text-sm font-semibold line-clamp-2 mb-2">{video.title}</h2>
               <div className="flex gap-8 justify-between">

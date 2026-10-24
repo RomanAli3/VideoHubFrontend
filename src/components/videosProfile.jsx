@@ -82,9 +82,9 @@ function ProfileVideos(){
            {myVideos?.length>0?(myVideos?.map((video)=>(
 <div onClick={()=>{navigate(`/play/${video._id}`)}} key={video._id} className={`${darkMode?"text-white hover:bg-gray-800 p-2 ":"text-black bg-gray-50 hover:bg-gray-200 p-2 " }cursor-pointer flex gap-2 flex-row md:flex-col rounded-sm  overflow-hidden  relative`} >
             <img src={video.thumbnailUrl} alt={video.title} className="w-44 md:w-65   shadow-sm  rounded-sm h-25 md:h-35 " />
-            <span className="bg-black p-1 absolute text-sm  md:bottom-22 bottom-2 m w-13 left-2 rounded-sm shadow-md text-white"> {Math.round(video.duration)} sec</span>
+            <span className="bg-black p-1 absolute text-sm  md:bottom-24 bottom-3 m w-13 left-2 rounded-sm shadow-md text-white"> {Math.round(video.duration)} sec</span>
             <div className="p-1">
-              <h2 className="text-xs md:text-sm font-semibold line-clamp-2 mb-2">{video.title}</h2>
+              <h2 className="text-xs  md:text-sm font-semibold line-clamp-2 mb-2">{video?.title.slice(0,33)}..</h2>
               <div className="flex gap-5 ">
               <span className="text-xs md:text-sm flex gap-3">
                   <p className=""><strong>Views:</strong>{video.views}</p>
