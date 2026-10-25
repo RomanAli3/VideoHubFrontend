@@ -2,11 +2,13 @@ import { NavLink } from "react-router-dom"
 import { useTheme } from "../Contexts/themeContext"
 import {useUser} from "../Contexts/userContext"
 import {useState} from "react"
+import { useNavigate } from "react-router-dom"
 
 function HeaderSection() {
       const { darkMode, toggleTheme } = useTheme();
       const [videoForm,setVideoForm]=useState(false);
       const {user,setUser}=useUser()
+      const navigate=useNavigate()
 
       //video form inputs 
       const [title,setTitle]=useState("")
@@ -85,8 +87,16 @@ function HeaderSection() {
        </div>
        <div className="flex gap-4 mt-1 text-sm poppins-extralight   items-center">
         <span>
-            <button onClick={()=>setVideoForm(true)} className=
-            {`px-3  py-1 rounded-xl border cursor-pointer ${darkMode?"bg-gray-800 border-gray-700":"bg-gray-100 border-gray-100"}`}><i className="fa-solid fa-plus"></i> Create</button>
+            <button onClick={()=>
+            {if(user){
+              setVideoForm(true)
+            }
+            else{
+              navigate("/profile")
+
+            }
+          }} 
+            className={`px-3  py-1 rounded-xl border cursor-pointer ${darkMode?"bg-gray-800 border-gray-700":"bg-gray-100 border-gray-100"}`}><i className="fa-solid fa-plus"></i> Create</button>
         </span>
         <span>
             <NavLink className={({isActive})=>isActive?"text-red-400 ":""} to='/' ><i className="fa-regular fa-house"></i> Home</NavLink>
@@ -104,8 +114,8 @@ function HeaderSection() {
 
     </header>
  {videoForm&&
-  <div className={`bg-black/30 justify-center shadow-3xl  flex items-center m-2 z-50 h-full fixed inset-0 ${ darkMode ? "bg-gray-900 text-white border-gray-700" : "bg-white text-gray-900 border-gray-300" } `}>
-     {user? <div className={`${darkMode?"bg-gray-800 shadow-gray-700 ":"bg-gray-100 shadow-gray-400"} relative  shadow-lg rounded-md  p-5 `}>
+  <div className={`bg-black/30 justify-center shadow-3xl  flex items-center m-2 z-10 h-full fixed inset-0 ${ darkMode ? "bg-gray-900 text-white border-gray-700" : "bg-white text-gray-900 border-gray-300" } `}>
+      <div className={`${darkMode?"bg-gray-800 shadow-gray-700 ":"bg-gray-100 shadow-gray-400"} relative  shadow-lg rounded-md  p-5 `}>
 <div className="flex justify-center">
   <span className="flex justify-center items-center">
     <img src="/favicon.png" className="h-15 md:h-18"/>
@@ -220,18 +230,16 @@ function HeaderSection() {
         </button>
 
 
-      </div>:<div></div>}
-      {
-    Loading &&
+      </div>
+      </div>
+  }
+   {loading &&
        <div className="bg-black/50 justify-center flex items-center z-50 h-full fixed inset-0">
       <div className={`${darkMode?"bg-gray-800 ":"bg-gray-300"} rounded-md  animate-pulse p-2 h-20 w-40`}>
 <p className={`font-bold text-center m-4 ${darkMode?"text-green-400":"text-green-600"}`}><i className="fa-solid fa-spinner animate-spin"></i></p>
       </div>
       </div>
 }
-      </div>
-  }
-  
 
 </>
   );

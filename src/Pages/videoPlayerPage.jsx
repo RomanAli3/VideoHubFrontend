@@ -1,6 +1,7 @@
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import  { useTheme } from "../Contexts/themeContext";
+
 import { useVideo } from "../Contexts/videoContext";
 function VideoPlayerPage() {
       const [Loading,setLoading] = useState(false)
@@ -10,6 +11,7 @@ function VideoPlayerPage() {
     const id = useParams().videoId; // Get the video ID from the URL parameters
   
     const [video, setVideo] = useState(null); 
+    const navigate = useNavigate() // Initialize the navigate function from react-router-dom
 
     const [descriptionExpend, setDescriptionExpend] = useState(50); // State to control the number of characters displayed in the description
 
@@ -63,7 +65,7 @@ useEffect(() => {
       useEffect(()=>{
             getVideo()
            
-        },[])
+        },[id])
 
 
 // Channel information code using video owner id
@@ -208,12 +210,12 @@ useEffect(() => {
 
       <div className="min-h-screen p-2 ">
     {videos?.data?.toReversed().map((video)=>(
-<div onClick={()=>{navigate(`/play/${video._id}`)}} key={video._id} className={` ${darkMode?"text-white hover:bg-gray-800 p-2 ":"text-black bg-gray-50 hover:bg-gray-200 p-2 " }cursor-pointer flex gap-2 flex-row md:flex-row rounded-sm  overflow-hidden  relative`} >
+<div onClick={()=>navigate(`/play/${video._id}`)} key={video._id} className={` ${darkMode?"text-white hover:bg-gray-800 p-2 ":"text-black bg-gray-50 hover:bg-gray-200 p-2 " }cursor-pointer flex gap-2 flex-row md:flex-row rounded-sm  overflow-hidden  relative`} >
             <img src={video.thumbnailUrl} alt={video.title} className="w-44 md:w-65   shadow-sm  rounded-sm h-25 md:h-35 " />
             <span className="bg-black p-1 absolute md:top-30 text-sm top-22  md:left-53 m w-13 left-32 rounded-sm shadow-md text-white"> {Math.round(video.duration)} sec</span>
             <div className="p-1">
               <h2 className="text-xs md:text-sm font-semibold line-clamp-2 mb-2">{video.title}</h2>
-              <div className="flex gap-8 justify-between">
+              <div className="flex gap-12 ">
               <span className="text-xs md:text-sm flex gap-4">
                   <p className=""><strong>Views: </strong>{video.views}</p>
                 <p>{timeAgo(video.createdAt)}</p>

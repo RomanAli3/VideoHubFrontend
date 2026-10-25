@@ -43,7 +43,7 @@ function setLinkPopup(){
  useEffect(() => {
 if(!videos){
   getVideos()}
-}, []);
+}, [videos]);
 const timeAgo = (date) => {
   const minutes = Math.floor((Date.now() - new Date(date)) / 60000);
 
@@ -65,7 +65,7 @@ const timeAgo = (date) => {
             <span className="bg-black p-1 relative bottom-8  left-2 rounded-sm shadow-md text-white"> {Math.round(video.duration)} sec</span>
             <div className="p-1">
               <h2 className="text-md font-semibold mb-1">{video.title}</h2>
-              <div className="flex justify-between">
+              <div className="flex gap-10">
               <span className="text-sm flex gap-5">
                   <p className=""><strong>Views: </strong>{video.views}</p>
                 <p>{timeAgo(video.createdAt)}</p>
