@@ -2,10 +2,13 @@ import {useVideo} from "../Contexts/videoContext"
 import { useState,useEffect } from "react"
 import { useTheme } from "../Contexts/themeContext"
 import { useNavigate } from "react-router-dom";
+import { useSearchQuery } from "../Contexts/searchQueryContext";
 function HomePage() {
       const { darkMode, toggleTheme } = useTheme();
         const [Loading,setLoading] = useState(false)
 const [copylink ,setCopylink] = useState(null)
+
+
 function copyVideoLink(link){
   navigator.clipboard.writeText(link)
 }
@@ -44,6 +47,17 @@ function setLinkPopup(){
 if(!videos){
   getVideos()}
 }, [videos]);
+
+const { videoSearch, setVideoSearch } = useSearchQuery();
+
+const filterVideos = videos?.data?.filter((video) => {
+  const search = videoSearch.trim().toLowerCase();
+
+  return (
+    video.title?.toLowerCase().includes(search) ||
+    video.description?.toLowerCase().includes(search)
+  );
+}) || [];
 const timeAgo = (date) => {
   const minutes = Math.floor((Date.now() - new Date(date)) / 60000);
 
@@ -59,9 +73,9 @@ const timeAgo = (date) => {
   return (
     <main className={` transition-colors duration-300 ${darkMode?"bg-gray-900 text-white":"bg-white text-gray-800"} min-h-screen`}>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-        {videos?.data?.map((video) => (
+        {filterVideos?.map((video) => (
           <div key={video._id} onClick={()=>navigate(`/play/${video._id}`)} className={`${darkMode?"text-white hover:bg-gray-800 p-2 ":"text-black bg-gray-50 hover:bg-gray-100 p-2 " }cursor-pointer rounded-sm  overflow-hidden`} >
-            <img src={video.thumbnailUrl} alt={video.title} className="w-full   shadow-sm  rounded-md h-53 object-cover" />
+            <img src={video.thumbnailUrl} alt={video.title} className="w-full   shadow-sm  rounded-md h-52 md:h-55 lg:h-62 xl:h-62 object-cover" />
             <span className="bg-black p-1 relative bottom-8  left-2 rounded-sm shadow-md text-white"> {Math.round(video.duration)} sec</span>
             <div className="p-1">
               <h2 className="text-md font-semibold mb-1">{video.title}</h2>

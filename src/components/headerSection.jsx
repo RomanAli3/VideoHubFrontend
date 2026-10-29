@@ -3,12 +3,15 @@ import { useTheme } from "../Contexts/themeContext"
 import {useUser} from "../Contexts/userContext"
 import {useState} from "react"
 import { useNavigate } from "react-router-dom"
-
+import { useSearchQuery } from "../Contexts/searchQueryContext"
 function HeaderSection() {
       const { darkMode, toggleTheme } = useTheme();
       const [videoForm,setVideoForm]=useState(false);
       const {user,setUser}=useUser()
       const navigate=useNavigate()
+
+      const {videoSearch,setVideoSearch}=useSearchQuery()
+   
 
       //video form inputs 
       const [title,setTitle]=useState("")
@@ -82,7 +85,7 @@ function HeaderSection() {
         <span><h1 className="text-md md:text-xl lg:text-2xl font-bold">VideoHub</h1></span>
        </div>
        <div className="search-bar  flex">
-        <input type="text" placeholder="Search..." className={`border outline-0  indent-8  rounded-l-2xl w-40 md:w-80 py-1 ${darkMode?"bg-gray-800 border-gray-700 placeholder-gray-200":"bg-gray-100 border-gray-100 placeholder-gray-800"}`} />
+        <input value={videoSearch} onChange={(e)=>setVideoSearch(e.target.value)} type="text" placeholder="Search..." className={`border outline-0  indent-8  rounded-l-2xl w-40 md:w-80 py-1 ${darkMode?"bg-gray-800 border-gray-700 placeholder-gray-200":"bg-gray-100 border-gray-100 placeholder-gray-800"}`} />
         <button className={`py-1 px-1.5  cursor-pointer border   rounded-r-2xl ${darkMode?"bg-gray-800 border-gray-700 hover:border-gray-600":"bg-gray-100 hover:bg-gray-200 border-gray-100"}`}><i className="fa-solid fa-magnifying-glass"></i></button>
        </div>
        <div className="flex gap-4 mt-1 text-sm poppins-extralight   items-center">
@@ -114,8 +117,8 @@ function HeaderSection() {
 
     </header>
  {videoForm&&
-  <div className={`bg-black/30 justify-center shadow-3xl  flex items-center m-2 z-10 h-full fixed inset-0 ${ darkMode ? "bg-gray-900 text-white border-gray-700" : "bg-white text-gray-900 border-gray-300" } `}>
-      <div className={`${darkMode?"bg-gray-800 shadow-gray-700 ":"bg-gray-100 shadow-gray-400"} relative  shadow-lg rounded-md  p-5 `}>
+  <div className={`bg-black/30 justify-center shadow-3xl  flex items-center m-2 z-20 h-full fixed inset-0 ${ darkMode ? "bg-gray-900 text-white border-gray-700" : "bg-white text-gray-900 border-gray-300" } `}>
+      <div className={`${darkMode?"bg-gray-800 shadow-gray-700 ":"bg-gray-100 shadow-gray-400"} relative w-100  shadow-lg rounded-md  p-5 `}>
 <div className="flex justify-center">
   <span className="flex justify-center items-center">
     <img src="/favicon.png" className="h-15 md:h-18"/>
@@ -129,7 +132,7 @@ function HeaderSection() {
 <br/><br/>
 <form onSubmit={handleVideoUpload} className="">
 
-<div className="grid  grid-cols-2  gap-2">
+<div className="grid text-xs md:text-sm  grid-cols-2  gap-2">
 
   <input
     required

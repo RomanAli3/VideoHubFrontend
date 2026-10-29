@@ -288,13 +288,13 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
   {user?<div className='relative '>
     <div>
       <img className='w-full object-cover relative   h-40 md:h-55 rounded-2xl p-2' src={user?.coverImage}/>
-      <div className={`h-10 cursor-pointer w-10 ${darkMode?"bg-gray-700":"bg-gray-300"} absolute bottom-2 right-4 z-40 flex items-center justify-center rounded-full`}  onClick={()=>setIsSelectCoverImage(true)}><i className="fa-solid fa-camera"></i></div>
+      <div className={`h-10 cursor-pointer w-10 ${darkMode?"bg-gray-700":"bg-gray-300"} absolute bottom-2 right-4 z-10 flex items-center justify-center rounded-full`}  onClick={()=>setIsSelectCoverImage(true)}><i className="fa-solid fa-camera"></i></div>
     </div>
   <div className={`flex border-b ${ darkMode?" border-gray-700":"border-gray-300"} absolute items-center w-full flex-wrap p-1  justify-between top-32 md:top-45`}>
      <div className='m-3 flex  items-center gap-1 md:gap-6'>
      <div className={`${darkMode?" border-blue-800":"border-black"} backdrop-blur-sm relative  h-25 md:h-40  w-25 md:w-40 rounded-full border`}>
       <img className='h-25 md:h-40 relative object-cover  w-25 md:w-40 rounded-full' src={user?.profilePicture}/>
-       <div className={`h-7 cursor-pointer w-7 ${darkMode?"bg-gray-700":"bg-gray-300"} absolute bottom-2 right-2 md:right-4 z-40 flex items-center justify-center rounded-full`}  onClick={()=>setIsSelectProfileImage(true)}><i className="fa-solid fa-camera"></i></div>
+       <div className={`h-7 cursor-pointer w-7 ${darkMode?"bg-gray-700":"bg-gray-300"} absolute bottom-2 right-2 md:right-4 z-10 flex items-center justify-center rounded-full`}  onClick={()=>setIsSelectProfileImage(true)}><i className="fa-solid fa-camera"></i></div>
 </div>
 <div className=''> 
   <h4 className='text-xl md:text-3xl font-semibold'>{user?.fullName}</h4>
@@ -352,7 +352,7 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
     </button>
   </div></div>}
   {loginForm&&
-  <div className="bg-black/30 justify-center flex items-center z-50 h-full fixed inset-0">
+  <div className="bg-black/40 justify-center flex items-center z-50 h-full fixed inset-0">
       <div className={`${darkMode?"bg-gray-800 ":"bg-gray-100"} relative rounded-md  p-5 `}>
 <div className="flex justify-center">
   <span className="flex justify-center items-center">
@@ -403,7 +403,7 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
 
 
    {registerForm&&
-  <div className="bg-black/30 justify-center flex items-center m-2 z-50 h-full fixed inset-0">
+  <div className="bg-black/40 justify-center flex items-center m-2 z-50 h-full fixed inset-0">
       <div className={`${darkMode?"bg-gray-800 ":"bg-gray-100"} relative rounded-md  p-5 `}>
 <div className="flex justify-center">
   <span className="flex justify-center items-center">
@@ -554,7 +554,7 @@ const [descriptionOpen,setDescriptionOpen]=useState(false)
 
 
  {updateInfo&&
-  <div className="bg-black/30 justify-center flex items-center z-50 h-full fixed inset-0">
+  <div className="bg-black/40 justify-center flex items-center z-50 h-full fixed inset-0">
       <div className={`${darkMode?"bg-gray-800 ":"bg-gray-100"} relative rounded-md  p-5 `}>
 <div className="text-center">
   <p className='text-xs font-semibold md:text-sm mt-1'>Change Full Name And Description</p>
