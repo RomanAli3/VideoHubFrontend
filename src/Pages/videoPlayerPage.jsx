@@ -241,7 +241,7 @@ useEffect(() => {
         <span className="text-xs md:text-xl
         
         pt-2 font-semibold m-4 ">{video?.title}</span>
-      <div className={`flex  items-center gap-10 ${darkMode?"text-white":"text-gray-800"}`}>
+      <div className={`flex  items-center gap-15  ${darkMode?"text-white":"text-gray-800"}`}>
           <span className="flex items-center text-sm gap-2 pl-3 p-1"><img className='w-12 h-12 rounded-full' src={channelInformation?.profilePicture}/><p className="first-letter:uppercase "><strong className="text-semibold">{channelInformation?.fullName}</strong><br/>
         {`${channelSubscriber?.[0]?.subscriber || 0} subscribers `}
         </p></span>
@@ -283,7 +283,7 @@ useEffect(() => {
    type="submit"
    
     className={`rounded-full  px-5 py-2 text-sm font-medium 
-    transition cursor-pointer ${darkMode?"text-white bg-gray-800":"text-black bg-gray-400"}
+    transition cursor-pointer  duration-300 ${darkMode?"text-white bg-gray-800":"text-black bg-gray-400"}
     disabled:cursor-not-allowed disabled:opacity-50`}
   >
     {commentError}
@@ -291,18 +291,29 @@ useEffect(() => {
 </div>
   </form>
 
-<div className={`${darkMode ? "bg-gray-800" : "bg-gray-300"} rounded-lg p-2 m-3`}>
+  
+<div className={`${darkMode ? "bg-gray-800" : "bg-gray-300"} transition-colors  duration-300 rounded-lg p-2 m-3`}>
   <h4 className="text-xl m-2 font-bold">Comments</h4>
   
   {comments && comments.length > 0 ? (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-2">
       {comments.toReversed().map((comment) => (
+        <div className={`${darkMode ? "bg-gray-700" : "bg-gray-200"} rounded-lg  p-1`}>
+      <span className="flex gap-2 items-center opacity-80 capitalize">
+      <img src={comment?.user.profilePicture}  className="w-7 h-7 rounded-full"/>
+      <p>{comment?.user.fullName} </p> <p className="text-xs"> {timeAgo(comment?.createdAt)}</p>
+      </span>
         <span 
           key={comment.id || comment.content} 
-          className={`${darkMode ? "bg-gray-700" : "bg-gray-200"} rounded-lg p-2 m-1`}
+          className={`flex justify-between  m-1`}
         >
-          {comment?.content}
+   
+      <p className="font-semibold ml-6"> {comment?.content} </p>  {comment?.user._id==user?._id&&(<i  className="fa-solid fa-trash-can"></i>)}
         </span>
+        <span>
+          
+        </span>
+        </div>
       ))}
     </div>
   ) : (
