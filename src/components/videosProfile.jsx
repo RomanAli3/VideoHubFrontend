@@ -60,6 +60,24 @@ function ProfileVideos(){
        }
 
     }
+
+    const deleteVideo=async(videoId)=>{
+      try {
+        setLoading(true)
+        const res=await fetch(`http://localhost:4000/video/delete-video/${videoId}`,{
+          method:"DELETE",
+          credentials:"include"
+        })
+        const data=await res.json()
+        if(res.ok){
+          console.log(data)
+          myVideosGet()
+        }
+      }
+      catch (error) {
+        console.log(error)
+      }
+    }
     const timeAgo = (date) => {
   const minutes = Math.floor((Date.now() - new Date(date)) / 60000);
 
@@ -77,7 +95,7 @@ function ProfileVideos(){
   user&&
   <div className="flex justify-between items-center m-3">
    <h3 className="text-2xl font-semibold  ml-6 ">Videos</h3>
-   <button className={` border ${darkMode?"bg-gray-800 border-gray-700":"bg-gray-300 border-gray-400"} px-2 py-1.5 cursor-pointer rounded-2xl`}>Manage Videos</button>
+   
   </div>
 }
 
@@ -102,14 +120,13 @@ function ProfileVideos(){
   </button>
 
   {copylink ==video._id&& (
-    <p onClick={()=>{
-      copyVideoLink(video.video)
-      setLinkPopup()
-      setCopylink(null)
+    <button onClick={()=>{
+     deleteVideo(video._id)
 
-    }} className="absolute right-3 top-5 bg-black text-white p-1 duration-300  rounded-sm whitespace-nowrap">
-      Copy link
-    </p>
+    }} className="absolute -right-9 top-5 bg-black text-white p-1 duration-300  rounded-sm whitespace-nowrap">
+  Delete
+    </button>
+    
   )}
  
 </span>

@@ -194,9 +194,27 @@ useEffect(() => {
           finally{
             setCommentError("Comment")
             setCommentText("")
+            getALlVideoComments()
           }
         }
 
+
+        const DeleteComment=async(commentId)=>{
+          try {
+            const res=await fetch(`http://localhost:4000/comment/delete-comment/${commentId}`,{
+              method:"DELETE",
+              credentials:"include"
+            })
+            const data=await res.json()
+            if(res.ok){
+              console.log("Successfully deleted comment",data)
+            }
+          } catch (error) {
+            console.log(error)
+          }finally{
+            getALlVideoComments()
+          }
+        }
         //copy link code
         const [copylink ,setCopylink] = useState(null)
            function copyVideoLink(link){
@@ -304,11 +322,11 @@ useEffect(() => {
       <p>{comment?.user.fullName} </p> <p className="text-xs"> {timeAgo(comment?.createdAt)}</p>
       </span>
         <span 
-          key={comment.id || comment.content} 
+          key={comment._id || comment.content} 
           className={`flex justify-between  m-1`}
         >
    
-      <p className="font-semibold ml-6"> {comment?.content} </p>  {comment?.user._id==user?._id&&(<i  className="fa-solid fa-trash-can"></i>)}
+      <p className="font-semibold ml-6"> {comment?.content} </p>  {comment?.user._id==user?._id&&(<i onClick={()=>DeleteComment(comment._id)}  className="fa-solid fa-trash-can cursor-pointer"></i>)}
         </span>
         <span>
           
