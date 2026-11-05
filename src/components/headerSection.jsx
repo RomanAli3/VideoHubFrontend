@@ -68,6 +68,7 @@ function HeaderSection() {
             setVideoFile(null)
             setThumbnailFile(null)
             setLoading(false)
+            window.location.reload()
           }
           else{
             setError(data?.message)
@@ -80,7 +81,7 @@ function HeaderSection() {
     <>
     <header className={` sticky top-0 z-50 ${ darkMode ? "bg-gray-900 text-white border-gray-700" : "bg-white text-gray-900 border-gray-300" } border-b transition-colors duration-300`}>
        <div className="flex justify-between  flex-wrap items-center py-2 px-4 ">
-<div className="logo flex gap-3 m-1 items-center">
+<div onClick={()=>navigate("/")} className="logo flex gap-3 m-1 cursor-pointer items-center">
         <span><img className="h-7 md:h-10" src="/favicon.png"/></span>
         <span><h1 className="text-md md:text-xl lg:text-2xl font-bold">VideoHub</h1></span>
        </div>

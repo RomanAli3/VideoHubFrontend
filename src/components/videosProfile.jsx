@@ -17,7 +17,7 @@ function ProfileVideos(){
     }
     const [linkCopied,setLinkCopied]=useState(false)
 
-   
+   const [VideoDeleteConformation,setVideoDeleteConformation]=useState(false)
     
     
     function setLinkPopup(){
@@ -100,6 +100,7 @@ function ProfileVideos(){
 }
 
            <div className={`flex flex-wrap gap-2  m-3`}>
+
            {myVideos?.length>0?(myVideos?.map((video)=>(
 <div key={video._id} className={`${darkMode?"text-white hover:bg-gray-800 p-2 ":"text-black bg-gray-50 hover:bg-gray-200 p-2 " }cursor-pointer flex gap-2 flex-row md:flex-col rounded-sm  overflow-hidden  relative`} >
             <img onClick={()=>{navigate(`/play/${video._id}`)}}  src={video.thumbnailUrl} alt={video.title} className="w-44 md:w-65   shadow-sm  rounded-sm h-25 md:h-35 " />
@@ -121,9 +122,9 @@ function ProfileVideos(){
 
   {copylink ==video._id&& (
     <button onClick={()=>{
-     deleteVideo(video._id)
+     setVideoDeleteConformation(true)
 
-    }} className="absolute -right-9 top-5 bg-black text-white p-1 duration-300  rounded-sm whitespace-nowrap">
+    }} className="absolute cursor-pointer -right-15 top-4  bg-black text-white p-2 duration-300  rounded-md whitespace-nowrap">
   Delete
     </button>
     
@@ -131,6 +132,69 @@ function ProfileVideos(){
  
 </span>
                 </div>
+                    
+  {VideoDeleteConformation && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4">
+
+    <div
+      className={`w-full max-w-sm rounded-xl p-6 shadow-2xl border animate-in fade-in zoom-in duration-200
+      ${
+        darkMode
+          ? "bg-gray-900 border-gray-700 text-white"
+          : "bg-white border-gray-200 text-gray-900"
+      }`}
+    >
+
+      {/* Warning Icon */}
+      <div className="flex justify-center mb-4">
+        <div className={`h-14 w-14 rounded-full flex items-center justify-center
+          ${darkMode ? "bg-red-500/10" : "bg-red-100"}`}>
+          <i className="fa-solid fa-trash-can text-2xl text-red-500"></i>
+        </div>
+      </div>
+
+      {/* Heading */}
+      <h2 className="text-xl font-bold text-center mb-2">
+        Delete Video?
+      </h2>
+
+      {/* Description */}
+      <p className={`text-sm text-center leading-relaxed mb-6
+        ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+        Are you sure you want to delete this video?
+        This action cannot be undone.
+      </p>
+
+      {/* Buttons */}
+      <div className="flex gap-3">
+
+        <button
+          onClick={() => setVideoDeleteConformation(false)}
+          className={`flex-1 py-2.5 rounded-lg font-semibold transition-colors
+          ${
+            darkMode
+              ? "bg-gray-800 hover:bg-gray-700 text-gray-200"
+              : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+          }`}
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={()=>{
+            deleteVideo(video._id)
+            setVideoDeleteConformation(false)
+          }}
+          className="flex-1 py-2.5 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold transition-colors"
+        >
+          <i className="fa-solid fa-trash-can mr-2"></i>
+          Delete
+        </button>
+
+      </div>
+    </div>
+  </div>
+)}
             </div>
           </div>
             ))):(
@@ -167,6 +231,7 @@ function ProfileVideos(){
       </div>
       </div>
 }
+ 
    {linkCopied&&(
        <div className="bg-black/30 justify-center flex items-center z-50 h-full fixed inset-0">
       <div className={`${darkMode?"bg-gray-800 ":"bg-gray-300"} rounded-md  animate-pulse p-2 h-20 w-40`}>
